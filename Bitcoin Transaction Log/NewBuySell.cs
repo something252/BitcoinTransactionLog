@@ -117,7 +117,7 @@ namespace Bitcoin_Transaction_Log
         
         private void BTCAndUSD_TextChanged(object sender, EventArgs e)
         {
-            if (BTCExchangerateLockCheckBox.Checked == true) {
+            if (BTCExchangerateLockCheckBox.Checked) {
                 if (IsNumeric(USDTextBox.Text) && IsNumeric(BTCTextBox.Text) && Convert.ToString(BTCTextBox.Text) != "0") {
 
                     decimal Fee = 0m;
@@ -126,13 +126,17 @@ namespace Bitcoin_Transaction_Log
                     }
 
                     try {
-                        BTCExchangeRateTextBox.Text = Convert.ToString(Math.Round((1m / Convert.ToDecimal(BTCTextBox.Text)) * (Convert.ToDecimal(USDTextBox.Text) * (1m - (Fee / 100m))), 5));
+                        BTCExchangeRateTextBox.Text = Convert.ToString(Math.Round((Convert.ToDecimal(BTCTextBox.Text) * Convert.ToDecimal(USDTextBox.Text)) / (1m + (Fee / 100m)), 5));
                     } catch {
                         BTCExchangeRateTextBox.Text = "Error";
                     }
 
                 } else {
                     BTCExchangeRateTextBox.Text = "0";
+                }
+            } else {
+                if (sender == FeeChargedTextBox) {
+                    BTCExchangeRateTextBox_TextChanged(BTCExchangeRateTextBox, e);
                 }
             }
         }
@@ -145,6 +149,45 @@ namespace Bitcoin_Transaction_Log
                     BTCAndUSD_TextChanged(sender, e);
                 } else {
                     BTCExchangeRateTextBox.ReadOnly = false;
+                }
+            }
+        }
+
+        private void BTCExchangeRateTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (!BTCExchangerateLockCheckBox.Checked) {
+                if (BTCTextBox.Text != "") {
+                    decimal btc;
+                    if (IsNumeric(BTCTextBox.Text)) {
+                        btc = Convert.ToDecimal(BTCTextBox.Text);
+                    } else {
+                        btc = 0m;
+                    }
+                    decimal exRate;
+                    if (IsNumeric(BTCExchangeRateTextBox.Text)) {
+                        exRate = Convert.ToDecimal(BTCExchangeRateTextBox.Text);
+                    } else {
+                        exRate = 0m;
+                    }
+                    decimal fee;
+                    if (IsNumeric(FeeChargedTextBox.Text)) {
+                        fee = Convert.ToDecimal(FeeChargedTextBox.Text) / 100m;
+                    } else {
+                        fee = 0m;
+                    }
+                       
+                    try {
+                        decimal usd = btc * exRate;
+                        if (usd > 0m) {
+                            if (fee > 0m) {
+                                USDTextBox.Text = Convert.ToString(usd * (1m + fee));
+                            } else {
+                                USDTextBox.Text = Convert.ToString(usd);
+                            }
+                        }
+                    } catch { // System.OverflowException
+                        USDTextBox.Text = "Too Large";
+                    }
                 }
             }
         }

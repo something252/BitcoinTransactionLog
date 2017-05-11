@@ -100,7 +100,7 @@ namespace Bitcoin_Transaction_Log
             if (IsNumeric(Properties.Settings.Default.UpdateInterval)) {
                 UpdateIntervalNumericUpDown.Value = Properties.Settings.Default.UpdateInterval;
             } else { // default value
-                UpdateIntervalNumericUpDown.Value = 10;
+                UpdateIntervalNumericUpDown.Value = 1;
             }
 
             if (Properties.Settings.Default.DataGridColumnWidths != null) {
@@ -130,7 +130,7 @@ namespace Bitcoin_Transaction_Log
         {
             lock (LockUpdates) {
                 if (this.WindowState == FormWindowState.Minimized) {
-                    if (this.Visible == false) {
+                    if (!this.Visible) {
                         this.Visible = true;
                     }
                     this.Opacity = 0.0;
@@ -212,7 +212,7 @@ namespace Bitcoin_Transaction_Log
                 UpdateLight.Image = Properties.Resources.green_light32;
 
                 try {
-                    if (Timer1Paused == false) {
+                    if (!Timer1Paused) {
                         WebRequest wrGETURL;
                         wrGETURL = WebRequest.Create("https://api.coinbase.com/v2/exchange-rates?currency=BTC");
                         wrGETURL.Timeout = 750;
@@ -552,7 +552,7 @@ namespace Bitcoin_Transaction_Log
         private void ComputeTotalBTCandUSD(ref decimal TotalBTC, ref decimal TotalUSD, ref decimal BuyUSD, ref decimal SellUSD)
         {
             for (int i = 0; i <= DataGridView1.Rows.Count - 1; i++) {
-                if (Convert.ToBoolean(DataGridView1[9, i].Value) == false) {
+                if (!Convert.ToBoolean(DataGridView1[9, i].Value)) {
 
                     string transactionType = Convert.ToString(DataGridView1[0, i].Value);
                     decimal BTC = Convert.ToDecimal(SanitizeNumber(DataGridView1[2, i].Value));
@@ -606,7 +606,7 @@ namespace Bitcoin_Transaction_Log
             lock (LockUpdates) {
                 decimal TotalBTC = 0m;
                 for (int i = 0; i <= DataGridView1.Rows.Count - 1; i++) {
-                    if (Convert.ToBoolean(DataGridView1[9, i].Value) == false) {
+                    if (!Convert.ToBoolean(DataGridView1[9, i].Value)) {
 
                         string transactionType = Convert.ToString(DataGridView1[0, i].Value);
                         decimal value = Convert.ToDecimal(SanitizeNumber(DataGridView1[2, i].Value));
@@ -669,7 +669,7 @@ namespace Bitcoin_Transaction_Log
         /// </summary>
         private void PauseButton_Click(object sender, EventArgs e)
         {
-            if (Timer1Paused == true) {
+            if (Timer1Paused) {
                 Timer1Paused = false;
                 UpdateRateTimer.Interval = Convert.ToInt32(UpdateIntervalNumericUpDown.Value) * 1000;
                 UpdateRateTimer_Tick(sender, e);
@@ -720,7 +720,7 @@ namespace Bitcoin_Transaction_Log
         /// </summary>
         private void CurrencyTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Loading == false) {
+            if (!Loading) {
                 ChangeColumnLabelCurrency(CurrencyTypeComboBox.Text, CurrentMoneyType);
                 UpdateRateTimer_Tick(sender, e);
             }
@@ -728,17 +728,17 @@ namespace Bitcoin_Transaction_Log
 
         private void CurrPriceBTCTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (Timer1Paused == true) {
+            if (Timer1Paused) {
                 PerformUpdates();
             }
         }
 
         private void UpdateIntervalNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            if (Loading == false) {
+            if (!Loading) {
                 UpdateRateTimer.Stop();
                 UpdateRateTimer.Interval = Convert.ToInt32(UpdateIntervalNumericUpDown.Value) * 1000;
-                if (Timer1Paused == false) {
+                if (!Timer1Paused) {
                     UpdateRateTimer.Start();
                 }
             }
@@ -746,7 +746,7 @@ namespace Bitcoin_Transaction_Log
 
         private void ChangesWereMade(object sender, EventArgs e)
         {
-            if (Loading == false) {
+            if (!Loading) {
                 PerformUpdates();
             }
         }
@@ -759,7 +759,7 @@ namespace Bitcoin_Transaction_Log
 
         private void DataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (Loading == false && DataGridUserEdit == true) {
+            if (!Loading && DataGridUserEdit) {
                 DataGridUserEdit = false;
                 PerformUpdates();
             }
@@ -853,7 +853,7 @@ namespace Bitcoin_Transaction_Log
 
         private void MainForm_Resize(object sender, EventArgs e)
         {
-            if (MinimizeButtonFlag == true) { // only when "minimize to tray" button is used and not standard minimizing
+            if (MinimizeButtonFlag) { // only when "minimize to tray" button is used and not standard minimizing
                 MinimizeButtonFlag = false;
                 NotifyIcon1.Visible = true;
                 Hide();
@@ -869,7 +869,7 @@ namespace Bitcoin_Transaction_Log
                 // right click
                 if (trayMenu == null) {
                     trayMenu = new TrayMenu(mainForm);
-                } else if (trayMenu.Visible == false) {
+                } else if (!trayMenu.Visible) {
                     trayMenu.Close();
                     trayMenu = new TrayMenu(mainForm);
                 }

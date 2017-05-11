@@ -206,9 +206,9 @@
             // 
             // SellAllNowProfitFeeTextBox
             // 
-            this.SellAllNowProfitFeeTextBox.Location = new System.Drawing.Point(1064, 19);
+            this.SellAllNowProfitFeeTextBox.Location = new System.Drawing.Point(1061, 19);
             this.SellAllNowProfitFeeTextBox.Name = "SellAllNowProfitFeeTextBox";
-            this.SellAllNowProfitFeeTextBox.Size = new System.Drawing.Size(29, 20);
+            this.SellAllNowProfitFeeTextBox.Size = new System.Drawing.Size(38, 20);
             this.SellAllNowProfitFeeTextBox.TabIndex = 41;
             this.SellAllNowProfitFeeTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.SellAllNowProfitFeeTextBox.TextChanged += new System.EventHandler(this.ChangesWereMade);
@@ -266,7 +266,7 @@
             // 
             this.Label10.AutoSize = true;
             this.Label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label10.Location = new System.Drawing.Point(1064, 4);
+            this.Label10.Location = new System.Drawing.Point(1065, 4);
             this.Label10.Name = "Label10";
             this.Label10.Size = new System.Drawing.Size(31, 12);
             this.Label10.TabIndex = 35;

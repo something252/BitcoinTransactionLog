@@ -33,7 +33,6 @@
             this.Label8 = new System.Windows.Forms.Label();
             this.Label6 = new System.Windows.Forms.Label();
             this.Label7 = new System.Windows.Forms.Label();
-            this.ComboBox1 = new System.Windows.Forms.ComboBox();
             this.Label5 = new System.Windows.Forms.Label();
             this.DateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.DateTimePicker2 = new System.Windows.Forms.DateTimePicker();
@@ -45,6 +44,7 @@
             this.Label1 = new System.Windows.Forms.Label();
             this.ConfirmButton = new System.Windows.Forms.Button();
             this.BTCTextBox = new System.Windows.Forms.TextBox();
+            this.ComboBox1 = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // BTCExchangerateLockCheckBox
@@ -113,18 +113,6 @@
             this.Label7.TabIndex = 44;
             this.Label7.Text = "Time";
             // 
-            // ComboBox1
-            // 
-            this.ComboBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ComboBox1.FormattingEnabled = true;
-            this.ComboBox1.Location = new System.Drawing.Point(0, 0);
-            this.ComboBox1.Name = "ComboBox1";
-            this.ComboBox1.Size = new System.Drawing.Size(305, 39);
-            this.ComboBox1.TabIndex = 41;
-            this.ComboBox1.SelectedIndexChanged += new System.EventHandler(this.ComboBox1_SelectedIndexChanged);
-            // 
             // Label5
             // 
             this.Label5.AutoSize = true;
@@ -171,12 +159,13 @@
             // 
             this.BTCExchangeRateTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BTCExchangeRateTextBox.Location = new System.Drawing.Point(0, 429);
-            this.BTCExchangeRateTextBox.MaxLength = 25;
+            this.BTCExchangeRateTextBox.MaxLength = 15;
             this.BTCExchangeRateTextBox.Name = "BTCExchangeRateTextBox";
             this.BTCExchangeRateTextBox.ReadOnly = true;
             this.BTCExchangeRateTextBox.Size = new System.Drawing.Size(307, 26);
             this.BTCExchangeRateTextBox.TabIndex = 39;
             this.BTCExchangeRateTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.BTCExchangeRateTextBox.TextChanged += new System.EventHandler(this.BTCExchangeRateTextBox_TextChanged);
             // 
             // Label3
             // 
@@ -245,18 +234,29 @@
             this.BTCTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.BTCTextBox.TextChanged += new System.EventHandler(this.BTCAndUSD_TextChanged);
             // 
+            // ComboBox1
+            // 
+            this.ComboBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComboBox1.FormattingEnabled = true;
+            this.ComboBox1.Location = new System.Drawing.Point(0, 0);
+            this.ComboBox1.Name = "ComboBox1";
+            this.ComboBox1.Size = new System.Drawing.Size(305, 39);
+            this.ComboBox1.TabIndex = 50;
+            // 
             // NewBuySell
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(305, 535);
+            this.Controls.Add(this.ComboBox1);
             this.Controls.Add(this.BTCExchangerateLockCheckBox);
             this.Controls.Add(this.FeeChargedTextBox);
             this.Controls.Add(this.Label9);
             this.Controls.Add(this.Label8);
             this.Controls.Add(this.Label6);
             this.Controls.Add(this.Label7);
-            this.Controls.Add(this.ComboBox1);
             this.Controls.Add(this.Label5);
             this.Controls.Add(this.DateTimePicker1);
             this.Controls.Add(this.DateTimePicker2);
@@ -286,7 +286,6 @@
         internal System.Windows.Forms.Label Label8;
         internal System.Windows.Forms.Label Label6;
         internal System.Windows.Forms.Label Label7;
-        internal System.Windows.Forms.ComboBox ComboBox1;
         internal System.Windows.Forms.Label Label5;
         internal System.Windows.Forms.DateTimePicker DateTimePicker1;
         internal System.Windows.Forms.DateTimePicker DateTimePicker2;
@@ -298,5 +297,6 @@
         internal System.Windows.Forms.Label Label1;
         internal System.Windows.Forms.Button ConfirmButton;
         internal System.Windows.Forms.TextBox BTCTextBox;
+        internal System.Windows.Forms.ComboBox ComboBox1;
     }
 }
