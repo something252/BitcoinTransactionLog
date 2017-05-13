@@ -31,12 +31,15 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Panel1 = new System.Windows.Forms.Panel();
-            this.minimizeToTrayButton = new System.Windows.Forms.Button();
-            this.alertsButton = new System.Windows.Forms.Button();
+            this.label14 = new System.Windows.Forms.Label();
             this.Label5 = new System.Windows.Forms.Label();
-            this.Label12 = new System.Windows.Forms.Label();
             this.FeeAfterCheckBox = new System.Windows.Forms.CheckBox();
             this.FeeBeforeCheckBox = new System.Windows.Forms.CheckBox();
+            this.SellAllBreakEvenTextBox = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.minimizeToTrayButton = new System.Windows.Forms.Button();
+            this.alertsButton = new System.Windows.Forms.Button();
+            this.Label12 = new System.Windows.Forms.Label();
             this.SellAllNowProfitFeeTextBox = new System.Windows.Forms.TextBox();
             this.CurrencyTypeComboBox = new System.Windows.Forms.ComboBox();
             this.Label11 = new System.Windows.Forms.Label();
@@ -93,12 +96,15 @@
             // 
             // Panel1
             // 
-            this.Panel1.Controls.Add(this.minimizeToTrayButton);
-            this.Panel1.Controls.Add(this.alertsButton);
+            this.Panel1.Controls.Add(this.label14);
             this.Panel1.Controls.Add(this.Label5);
-            this.Panel1.Controls.Add(this.Label12);
             this.Panel1.Controls.Add(this.FeeAfterCheckBox);
             this.Panel1.Controls.Add(this.FeeBeforeCheckBox);
+            this.Panel1.Controls.Add(this.SellAllBreakEvenTextBox);
+            this.Panel1.Controls.Add(this.label13);
+            this.Panel1.Controls.Add(this.minimizeToTrayButton);
+            this.Panel1.Controls.Add(this.alertsButton);
+            this.Panel1.Controls.Add(this.Label12);
             this.Panel1.Controls.Add(this.SellAllNowProfitFeeTextBox);
             this.Panel1.Controls.Add(this.CurrencyTypeComboBox);
             this.Panel1.Controls.Add(this.Label11);
@@ -133,6 +139,76 @@
             this.Panel1.Size = new System.Drawing.Size(1334, 100);
             this.Panel1.TabIndex = 10;
             // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(355, 41);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(123, 18);
+            this.label14.TabIndex = 52;
+            this.label14.Text = "Break-Even Price";
+            this.ToolTip1.SetToolTip(this.label14, "Sell all now break-even price");
+            // 
+            // Label5
+            // 
+            this.Label5.AutoSize = true;
+            this.Label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label5.Location = new System.Drawing.Point(363, 4);
+            this.Label5.Name = "Label5";
+            this.Label5.Size = new System.Drawing.Size(119, 18);
+            this.Label5.TabIndex = 55;
+            this.Label5.Text = "Fee Functionality";
+            this.Label5.Visible = false;
+            // 
+            // FeeAfterCheckBox
+            // 
+            this.FeeAfterCheckBox.AutoSize = true;
+            this.FeeAfterCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.FeeAfterCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FeeAfterCheckBox.Location = new System.Drawing.Point(370, 48);
+            this.FeeAfterCheckBox.Name = "FeeAfterCheckBox";
+            this.FeeAfterCheckBox.Size = new System.Drawing.Size(112, 14);
+            this.FeeAfterCheckBox.TabIndex = 56;
+            this.FeeAfterCheckBox.Text = "Fee Taken After Buy USD";
+            this.FeeAfterCheckBox.UseVisualStyleBackColor = true;
+            this.FeeAfterCheckBox.Visible = false;
+            // 
+            // FeeBeforeCheckBox
+            // 
+            this.FeeBeforeCheckBox.AutoSize = true;
+            this.FeeBeforeCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.FeeBeforeCheckBox.Checked = true;
+            this.FeeBeforeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.FeeBeforeCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FeeBeforeCheckBox.Location = new System.Drawing.Point(365, 29);
+            this.FeeBeforeCheckBox.Name = "FeeBeforeCheckBox";
+            this.FeeBeforeCheckBox.Size = new System.Drawing.Size(117, 14);
+            this.FeeBeforeCheckBox.TabIndex = 54;
+            this.FeeBeforeCheckBox.Text = "Fee Factored Into Buy USD";
+            this.FeeBeforeCheckBox.UseVisualStyleBackColor = true;
+            this.FeeBeforeCheckBox.Visible = false;
+            // 
+            // SellAllBreakEvenTextBox
+            // 
+            this.SellAllBreakEvenTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SellAllBreakEvenTextBox.Location = new System.Drawing.Point(360, 62);
+            this.SellAllBreakEvenTextBox.Name = "SellAllBreakEvenTextBox";
+            this.SellAllBreakEvenTextBox.ReadOnly = true;
+            this.SellAllBreakEvenTextBox.Size = new System.Drawing.Size(114, 26);
+            this.SellAllBreakEvenTextBox.TabIndex = 51;
+            this.SellAllBreakEvenTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(347, 65);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(16, 18);
+            this.label13.TabIndex = 53;
+            this.label13.Text = "$";
+            // 
             // minimizeToTrayButton
             // 
             this.minimizeToTrayButton.Location = new System.Drawing.Point(838, 5);
@@ -155,17 +231,6 @@
             this.alertsButton.UseVisualStyleBackColor = true;
             this.alertsButton.Click += new System.EventHandler(this.alertsButton_Click);
             // 
-            // Label5
-            // 
-            this.Label5.AutoSize = true;
-            this.Label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label5.Location = new System.Drawing.Point(355, 21);
-            this.Label5.Name = "Label5";
-            this.Label5.Size = new System.Drawing.Size(119, 18);
-            this.Label5.TabIndex = 44;
-            this.Label5.Text = "Fee Functionality";
-            this.Label5.Visible = false;
-            // 
             // Label12
             // 
             this.Label12.AutoSize = true;
@@ -176,37 +241,10 @@
             this.Label12.TabIndex = 48;
             this.Label12.Text = "(Fees are currently only priced \r\ninto buys and after sells)";
             // 
-            // FeeAfterCheckBox
-            // 
-            this.FeeAfterCheckBox.AutoSize = true;
-            this.FeeAfterCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.FeeAfterCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FeeAfterCheckBox.Location = new System.Drawing.Point(362, 65);
-            this.FeeAfterCheckBox.Name = "FeeAfterCheckBox";
-            this.FeeAfterCheckBox.Size = new System.Drawing.Size(112, 14);
-            this.FeeAfterCheckBox.TabIndex = 45;
-            this.FeeAfterCheckBox.Text = "Fee Taken After Buy USD";
-            this.FeeAfterCheckBox.UseVisualStyleBackColor = true;
-            this.FeeAfterCheckBox.Visible = false;
-            // 
-            // FeeBeforeCheckBox
-            // 
-            this.FeeBeforeCheckBox.AutoSize = true;
-            this.FeeBeforeCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.FeeBeforeCheckBox.Checked = true;
-            this.FeeBeforeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.FeeBeforeCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FeeBeforeCheckBox.Location = new System.Drawing.Point(357, 46);
-            this.FeeBeforeCheckBox.Name = "FeeBeforeCheckBox";
-            this.FeeBeforeCheckBox.Size = new System.Drawing.Size(117, 14);
-            this.FeeBeforeCheckBox.TabIndex = 43;
-            this.FeeBeforeCheckBox.Text = "Fee Factored Into Buy USD";
-            this.FeeBeforeCheckBox.UseVisualStyleBackColor = true;
-            this.FeeBeforeCheckBox.Visible = false;
-            // 
             // SellAllNowProfitFeeTextBox
             // 
             this.SellAllNowProfitFeeTextBox.Location = new System.Drawing.Point(1061, 19);
+            this.SellAllNowProfitFeeTextBox.MaxLength = 20;
             this.SellAllNowProfitFeeTextBox.Name = "SellAllNowProfitFeeTextBox";
             this.SellAllNowProfitFeeTextBox.Size = new System.Drawing.Size(38, 20);
             this.SellAllNowProfitFeeTextBox.TabIndex = 41;
@@ -372,8 +410,7 @@
             this.IgnoreLossCheckBox.Size = new System.Drawing.Size(76, 31);
             this.IgnoreLossCheckBox.TabIndex = 26;
             this.IgnoreLossCheckBox.Text = "Ignore \"Loss\"";
-            this.ToolTip1.SetToolTip(this.IgnoreLossCheckBox, "Ignore the money ($) lost from \"LOSS\" transactions for things like \"sell all now " +
-        "profit\"");
+            this.ToolTip1.SetToolTip(this.IgnoreLossCheckBox, "Disable \"LOSS\" transactions in calculations");
             this.IgnoreLossCheckBox.UseVisualStyleBackColor = true;
             this.IgnoreLossCheckBox.CheckedChanged += new System.EventHandler(this.ChangesWereMade);
             // 
@@ -608,7 +645,7 @@
             // BreakEvenPointColumn
             // 
             this.BreakEvenPointColumn.FillWeight = 75F;
-            this.BreakEvenPointColumn.HeaderText = "Break Even Point";
+            this.BreakEvenPointColumn.HeaderText = "Break-Even Point";
             this.BreakEvenPointColumn.MaxInputLength = 20;
             this.BreakEvenPointColumn.Name = "BreakEvenPointColumn";
             this.BreakEvenPointColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
@@ -686,10 +723,7 @@
         #endregion
 
         internal System.Windows.Forms.Panel Panel1;
-        internal System.Windows.Forms.Label Label5;
         internal System.Windows.Forms.Label Label12;
-        internal System.Windows.Forms.CheckBox FeeAfterCheckBox;
-        internal System.Windows.Forms.CheckBox FeeBeforeCheckBox;
         internal System.Windows.Forms.TextBox SellAllNowProfitFeeTextBox;
         internal System.Windows.Forms.Label Label11;
         internal System.Windows.Forms.PictureBox UpdateLight;
@@ -721,6 +755,16 @@
         internal System.Windows.Forms.ToolTip ToolTip1;
         internal System.ComponentModel.BackgroundWorker UpdateBitcoinValue;
         internal System.Windows.Forms.ComboBox CurrencyTypeComboBox;
+        public System.Windows.Forms.Timer PriceAlertTimer;
+        internal System.Windows.Forms.Button alertsButton;
+        internal System.Windows.Forms.Button minimizeToTrayButton;
+        internal System.Windows.Forms.NotifyIcon NotifyIcon1;
+        internal System.Windows.Forms.Label Label5;
+        internal System.Windows.Forms.CheckBox FeeAfterCheckBox;
+        internal System.Windows.Forms.CheckBox FeeBeforeCheckBox;
+        internal System.Windows.Forms.TextBox SellAllBreakEvenTextBox;
+        internal System.Windows.Forms.Label label13;
+        internal System.Windows.Forms.Label label14;
         private System.Windows.Forms.DataGridViewTextBoxColumn BuySellColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateTimeColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn BTCColumn;
@@ -732,9 +776,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn BreakEvenPointColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn DisabledColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn CommentsColumn;
-        public System.Windows.Forms.Timer PriceAlertTimer;
-        internal System.Windows.Forms.Button alertsButton;
-        internal System.Windows.Forms.Button minimizeToTrayButton;
-        internal System.Windows.Forms.NotifyIcon NotifyIcon1;
     }
 }

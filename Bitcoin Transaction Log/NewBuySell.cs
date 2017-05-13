@@ -114,7 +114,7 @@ namespace Bitcoin_Transaction_Log
 
             this.Close();
         }
-        
+
         private void BTCAndUSD_TextChanged(object sender, EventArgs e)
         {
             if (BTCExchangerateLockCheckBox.Checked) {
@@ -175,7 +175,7 @@ namespace Bitcoin_Transaction_Log
                     } else {
                         fee = 0m;
                     }
-                       
+
                     try {
                         decimal usd = btc * exRate;
                         if (usd > 0m) {

@@ -14,6 +14,8 @@ namespace Bitcoin_Transaction_Log
     {
         static MainForm mainForm;
         const int limit = 100;
+        const string toggleAlertsButtonDisabled = "Price alerts disabled";
+        const string toggleAlertsButtonEnabled = "Price alerts enabled";
 
         public Alerts(MainForm form)
         {
@@ -37,8 +39,10 @@ namespace Bitcoin_Transaction_Log
             }
             if (!Properties.Settings.Default.PriceAlertsEnabled) {
                 toggleAlertsButton.Text = "Disabled";
+                toolTip1.SetToolTip(toggleAlertsButton, toggleAlertsButtonDisabled);
             } else {
                 toggleAlertsButton.Text = "Enabled";
+                toolTip1.SetToolTip(toggleAlertsButton, toggleAlertsButtonEnabled);
             }
         }
 
@@ -166,9 +170,11 @@ namespace Bitcoin_Transaction_Log
             if (toggleAlertsButton.Text == "Enabled") {
                 Properties.Settings.Default.PriceAlertsEnabled = false;
                 toggleAlertsButton.Text = "Disabled";
+                toolTip1.SetToolTip(toggleAlertsButton, toggleAlertsButtonDisabled);
             } else {
                 Properties.Settings.Default.PriceAlertsEnabled = true;
                 toggleAlertsButton.Text = "Enabled";
+                toolTip1.SetToolTip(toggleAlertsButton, toggleAlertsButtonEnabled);
             }
             mainForm.StartAlertsTimer();
         }

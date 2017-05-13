@@ -27,6 +27,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.addListBox1 = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -38,6 +39,7 @@
             this.addTextBox1 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.toggleAlertsButton = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // addListBox1
@@ -97,6 +99,7 @@
             this.removeButton1.Size = new System.Drawing.Size(327, 44);
             this.removeButton1.TabIndex = 4;
             this.removeButton1.Text = "Remove Selected";
+            this.toolTip1.SetToolTip(this.removeButton1, "Remove selected list items");
             this.removeButton1.UseVisualStyleBackColor = true;
             this.removeButton1.Click += new System.EventHandler(this.removeButton1_Click);
             // 
@@ -118,6 +121,7 @@
             this.addButton2.Size = new System.Drawing.Size(54, 24);
             this.addButton2.TabIndex = 7;
             this.addButton2.Text = "Add";
+            this.toolTip1.SetToolTip(this.addButton2, "Add value to list");
             this.addButton2.UseVisualStyleBackColor = true;
             this.addButton2.Click += new System.EventHandler(this.addButton2_Click);
             // 
@@ -130,6 +134,7 @@
             this.addButton1.Size = new System.Drawing.Size(54, 24);
             this.addButton1.TabIndex = 9;
             this.addButton1.Text = "Add";
+            this.toolTip1.SetToolTip(this.addButton1, "Add value to list");
             this.addButton1.UseVisualStyleBackColor = true;
             this.addButton1.Click += new System.EventHandler(this.addButton1_Click);
             // 
@@ -208,5 +213,6 @@
         private System.Windows.Forms.TextBox addTextBox1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button toggleAlertsButton;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
