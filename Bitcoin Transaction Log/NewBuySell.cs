@@ -126,7 +126,7 @@ namespace Bitcoin_Transaction_Log
                     }
 
                     try {
-                        BTCExchangeRateTextBox.Text = Convert.ToString(Math.Round((Convert.ToDecimal(BTCTextBox.Text) * Convert.ToDecimal(USDTextBox.Text)) / (1m + (Fee / 100m)), 5));
+                        BTCExchangeRateTextBox.Text = Convert.ToString(Math.Round((1m / (Convert.ToDecimal(BTCTextBox.Text)) * Convert.ToDecimal(USDTextBox.Text)) / (1m + (Fee / 100m)), 5));
                     } catch {
                         BTCExchangeRateTextBox.Text = "Error";
                     }
