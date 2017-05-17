@@ -42,7 +42,7 @@ namespace Bitcoin_Transaction_Log
             } else {
                 return "0";
             }
-           
+
         }
     }
 }

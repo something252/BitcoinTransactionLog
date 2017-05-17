@@ -31,10 +31,13 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Panel1 = new System.Windows.Forms.Panel();
+            this.ProfitPercentTextBox = new System.Windows.Forms.TextBox();
+            this.CurrPriceBTCTextBox = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.Label5 = new System.Windows.Forms.Label();
             this.FeeAfterCheckBox = new System.Windows.Forms.CheckBox();
             this.FeeBeforeCheckBox = new System.Windows.Forms.CheckBox();
+            this.BreakEvenPriceButton = new System.Windows.Forms.PictureBox();
             this.SellAllBreakEvenTextBox = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.minimizeToTrayButton = new System.Windows.Forms.Button();
@@ -65,10 +68,9 @@
             this.Label2 = new System.Windows.Forms.Label();
             this.NewSellButton = new System.Windows.Forms.Button();
             this.Label1 = new System.Windows.Forms.Label();
-            this.CurrPriceBTCTextBox = new System.Windows.Forms.TextBox();
             this.AboutButton = new System.Windows.Forms.Button();
             this.DataGridView1 = new System.Windows.Forms.DataGridView();
-            this.BuySellColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BuySellColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.DateTimeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BTCColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.USDColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -85,6 +87,7 @@
             this.PriceAlertTimer = new System.Windows.Forms.Timer(this.components);
             this.NotifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.Panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BreakEvenPriceButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdateLight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SellAllProfitInfoButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BitcoinPictureBox2)).BeginInit();
@@ -96,10 +99,13 @@
             // 
             // Panel1
             // 
+            this.Panel1.Controls.Add(this.ProfitPercentTextBox);
+            this.Panel1.Controls.Add(this.CurrPriceBTCTextBox);
             this.Panel1.Controls.Add(this.label14);
             this.Panel1.Controls.Add(this.Label5);
             this.Panel1.Controls.Add(this.FeeAfterCheckBox);
             this.Panel1.Controls.Add(this.FeeBeforeCheckBox);
+            this.Panel1.Controls.Add(this.BreakEvenPriceButton);
             this.Panel1.Controls.Add(this.SellAllBreakEvenTextBox);
             this.Panel1.Controls.Add(this.label13);
             this.Panel1.Controls.Add(this.minimizeToTrayButton);
@@ -130,20 +136,41 @@
             this.Panel1.Controls.Add(this.Label2);
             this.Panel1.Controls.Add(this.NewSellButton);
             this.Panel1.Controls.Add(this.Label1);
-            this.Panel1.Controls.Add(this.CurrPriceBTCTextBox);
             this.Panel1.Controls.Add(this.AboutButton);
             this.Panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.Panel1.Location = new System.Drawing.Point(0, 0);
             this.Panel1.MaximumSize = new System.Drawing.Size(0, 100);
             this.Panel1.Name = "Panel1";
-            this.Panel1.Size = new System.Drawing.Size(1334, 100);
+            this.Panel1.Size = new System.Drawing.Size(1361, 100);
             this.Panel1.TabIndex = 10;
+            // 
+            // ProfitPercentTextBox
+            // 
+            this.ProfitPercentTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ProfitPercentTextBox.Location = new System.Drawing.Point(1131, 76);
+            this.ProfitPercentTextBox.Name = "ProfitPercentTextBox";
+            this.ProfitPercentTextBox.ReadOnly = true;
+            this.ProfitPercentTextBox.Size = new System.Drawing.Size(191, 24);
+            this.ProfitPercentTextBox.TabIndex = 61;
+            this.ProfitPercentTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // CurrPriceBTCTextBox
+            // 
+            this.CurrPriceBTCTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CurrPriceBTCTextBox.Location = new System.Drawing.Point(619, 42);
+            this.CurrPriceBTCTextBox.MaxLength = 20;
+            this.CurrPriceBTCTextBox.Name = "CurrPriceBTCTextBox";
+            this.CurrPriceBTCTextBox.ReadOnly = true;
+            this.CurrPriceBTCTextBox.Size = new System.Drawing.Size(163, 47);
+            this.CurrPriceBTCTextBox.TabIndex = 10;
+            this.CurrPriceBTCTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CurrPriceBTCTextBox.TextChanged += new System.EventHandler(this.CurrPriceBTCTextBox_TextChanged);
             // 
             // label14
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(355, 41);
+            this.label14.Location = new System.Drawing.Point(356, 42);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(123, 18);
             this.label14.TabIndex = 52;
@@ -154,10 +181,10 @@
             // 
             this.Label5.AutoSize = true;
             this.Label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label5.Location = new System.Drawing.Point(363, 4);
+            this.Label5.Location = new System.Drawing.Point(383, 0);
             this.Label5.Name = "Label5";
             this.Label5.Size = new System.Drawing.Size(119, 18);
-            this.Label5.TabIndex = 55;
+            this.Label5.TabIndex = 59;
             this.Label5.Text = "Fee Functionality";
             this.Label5.Visible = false;
             // 
@@ -166,10 +193,10 @@
             this.FeeAfterCheckBox.AutoSize = true;
             this.FeeAfterCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.FeeAfterCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FeeAfterCheckBox.Location = new System.Drawing.Point(370, 48);
+            this.FeeAfterCheckBox.Location = new System.Drawing.Point(390, 44);
             this.FeeAfterCheckBox.Name = "FeeAfterCheckBox";
             this.FeeAfterCheckBox.Size = new System.Drawing.Size(112, 14);
-            this.FeeAfterCheckBox.TabIndex = 56;
+            this.FeeAfterCheckBox.TabIndex = 60;
             this.FeeAfterCheckBox.Text = "Fee Taken After Buy USD";
             this.FeeAfterCheckBox.UseVisualStyleBackColor = true;
             this.FeeAfterCheckBox.Visible = false;
@@ -181,18 +208,29 @@
             this.FeeBeforeCheckBox.Checked = true;
             this.FeeBeforeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.FeeBeforeCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FeeBeforeCheckBox.Location = new System.Drawing.Point(365, 29);
+            this.FeeBeforeCheckBox.Location = new System.Drawing.Point(385, 25);
             this.FeeBeforeCheckBox.Name = "FeeBeforeCheckBox";
             this.FeeBeforeCheckBox.Size = new System.Drawing.Size(117, 14);
-            this.FeeBeforeCheckBox.TabIndex = 54;
+            this.FeeBeforeCheckBox.TabIndex = 58;
             this.FeeBeforeCheckBox.Text = "Fee Factored Into Buy USD";
             this.FeeBeforeCheckBox.UseVisualStyleBackColor = true;
             this.FeeBeforeCheckBox.Visible = false;
             // 
+            // BreakEvenPriceButton
+            // 
+            this.BreakEvenPriceButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.BreakEvenPriceButton.Location = new System.Drawing.Point(474, 63);
+            this.BreakEvenPriceButton.Name = "BreakEvenPriceButton";
+            this.BreakEvenPriceButton.Size = new System.Drawing.Size(30, 26);
+            this.BreakEvenPriceButton.TabIndex = 57;
+            this.BreakEvenPriceButton.TabStop = false;
+            this.ToolTip1.SetToolTip(this.BreakEvenPriceButton, "Click to show how the revenue is computed");
+            this.BreakEvenPriceButton.Click += new System.EventHandler(this.BreakEvenPriceButton_Click);
+            // 
             // SellAllBreakEvenTextBox
             // 
             this.SellAllBreakEvenTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SellAllBreakEvenTextBox.Location = new System.Drawing.Point(360, 62);
+            this.SellAllBreakEvenTextBox.Location = new System.Drawing.Point(360, 63);
             this.SellAllBreakEvenTextBox.Name = "SellAllBreakEvenTextBox";
             this.SellAllBreakEvenTextBox.ReadOnly = true;
             this.SellAllBreakEvenTextBox.Size = new System.Drawing.Size(114, 26);
@@ -203,7 +241,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(347, 65);
+            this.label13.Location = new System.Drawing.Point(347, 66);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(16, 18);
             this.label13.TabIndex = 53;
@@ -211,7 +249,7 @@
             // 
             // minimizeToTrayButton
             // 
-            this.minimizeToTrayButton.Location = new System.Drawing.Point(838, 5);
+            this.minimizeToTrayButton.Location = new System.Drawing.Point(862, 5);
             this.minimizeToTrayButton.Name = "minimizeToTrayButton";
             this.minimizeToTrayButton.Size = new System.Drawing.Size(62, 34);
             this.minimizeToTrayButton.TabIndex = 50;
@@ -222,7 +260,7 @@
             // 
             // alertsButton
             // 
-            this.alertsButton.Location = new System.Drawing.Point(906, 5);
+            this.alertsButton.Location = new System.Drawing.Point(930, 5);
             this.alertsButton.Name = "alertsButton";
             this.alertsButton.Size = new System.Drawing.Size(74, 34);
             this.alertsButton.TabIndex = 49;
@@ -237,13 +275,13 @@
             this.Label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Label12.Location = new System.Drawing.Point(241, 5);
             this.Label12.Name = "Label12";
-            this.Label12.Size = new System.Drawing.Size(130, 24);
+            this.Label12.Size = new System.Drawing.Size(111, 24);
             this.Label12.TabIndex = 48;
-            this.Label12.Text = "(Fees are currently only priced \r\ninto buys and after sells)";
+            this.Label12.Text = "(Fees are currently priced \r\ninto buys and sells)";
             // 
             // SellAllNowProfitFeeTextBox
             // 
-            this.SellAllNowProfitFeeTextBox.Location = new System.Drawing.Point(1061, 19);
+            this.SellAllNowProfitFeeTextBox.Location = new System.Drawing.Point(1079, 14);
             this.SellAllNowProfitFeeTextBox.MaxLength = 20;
             this.SellAllNowProfitFeeTextBox.Name = "SellAllNowProfitFeeTextBox";
             this.SellAllNowProfitFeeTextBox.Size = new System.Drawing.Size(38, 20);
@@ -256,7 +294,7 @@
             this.CurrencyTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CurrencyTypeComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CurrencyTypeComboBox.FormattingEnabled = true;
-            this.CurrencyTypeComboBox.Location = new System.Drawing.Point(488, 59);
+            this.CurrencyTypeComboBox.Location = new System.Drawing.Point(517, 59);
             this.CurrencyTypeComboBox.Name = "CurrencyTypeComboBox";
             this.CurrencyTypeComboBox.Size = new System.Drawing.Size(59, 24);
             this.CurrencyTypeComboBox.TabIndex = 39;
@@ -265,7 +303,7 @@
             // Label11
             // 
             this.Label11.AutoSize = true;
-            this.Label11.Location = new System.Drawing.Point(494, 44);
+            this.Label11.Location = new System.Drawing.Point(523, 44);
             this.Label11.Name = "Label11";
             this.Label11.Size = new System.Drawing.Size(49, 13);
             this.Label11.TabIndex = 40;
@@ -273,7 +311,7 @@
             // 
             // UpdateLight
             // 
-            this.UpdateLight.Location = new System.Drawing.Point(852, 57);
+            this.UpdateLight.Location = new System.Drawing.Point(876, 57);
             this.UpdateLight.Name = "UpdateLight";
             this.UpdateLight.Size = new System.Drawing.Size(32, 32);
             this.UpdateLight.TabIndex = 38;
@@ -282,7 +320,7 @@
             // SellAllProfitInfoButton
             // 
             this.SellAllProfitInfoButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.SellAllProfitInfoButton.Location = new System.Drawing.Point(1300, 12);
+            this.SellAllProfitInfoButton.Location = new System.Drawing.Point(1321, 1);
             this.SellAllProfitInfoButton.Name = "SellAllProfitInfoButton";
             this.SellAllProfitInfoButton.Size = new System.Drawing.Size(30, 26);
             this.SellAllProfitInfoButton.TabIndex = 36;
@@ -294,7 +332,7 @@
             // 
             this.Label4.AutoSize = true;
             this.Label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label4.Location = new System.Drawing.Point(1099, 10);
+            this.Label4.Location = new System.Drawing.Point(1119, -1);
             this.Label4.Name = "Label4";
             this.Label4.Size = new System.Drawing.Size(206, 29);
             this.Label4.TabIndex = 18;
@@ -304,7 +342,7 @@
             // 
             this.Label10.AutoSize = true;
             this.Label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label10.Location = new System.Drawing.Point(1065, 4);
+            this.Label10.Location = new System.Drawing.Point(1084, 1);
             this.Label10.Name = "Label10";
             this.Label10.Size = new System.Drawing.Size(31, 12);
             this.Label10.TabIndex = 35;
@@ -313,7 +351,7 @@
             // SellAllNowRevenueTextBox
             // 
             this.SellAllNowRevenueTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SellAllNowRevenueTextBox.Location = new System.Drawing.Point(917, 63);
+            this.SellAllNowRevenueTextBox.Location = new System.Drawing.Point(941, 63);
             this.SellAllNowRevenueTextBox.Name = "SellAllNowRevenueTextBox";
             this.SellAllNowRevenueTextBox.ReadOnly = true;
             this.SellAllNowRevenueTextBox.Size = new System.Drawing.Size(114, 26);
@@ -324,7 +362,7 @@
             // 
             this.Label9.AutoSize = true;
             this.Label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label9.Location = new System.Drawing.Point(904, 66);
+            this.Label9.Location = new System.Drawing.Point(928, 66);
             this.Label9.Name = "Label9";
             this.Label9.Size = new System.Drawing.Size(16, 18);
             this.Label9.TabIndex = 33;
@@ -374,7 +412,7 @@
             // 
             this.Label8.AutoSize = true;
             this.Label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label8.Location = new System.Drawing.Point(903, 42);
+            this.Label8.Location = new System.Drawing.Point(927, 42);
             this.Label8.Name = "Label8";
             this.Label8.Size = new System.Drawing.Size(148, 18);
             this.Label8.TabIndex = 28;
@@ -383,17 +421,17 @@
             // SellAllNowProfitTextBox
             // 
             this.SellAllNowProfitTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SellAllNowProfitTextBox.Location = new System.Drawing.Point(1104, 42);
+            this.SellAllNowProfitTextBox.Location = new System.Drawing.Point(1131, 31);
             this.SellAllNowProfitTextBox.Name = "SellAllNowProfitTextBox";
             this.SellAllNowProfitTextBox.ReadOnly = true;
-            this.SellAllNowProfitTextBox.Size = new System.Drawing.Size(201, 47);
+            this.SellAllNowProfitTextBox.Size = new System.Drawing.Size(191, 47);
             this.SellAllNowProfitTextBox.TabIndex = 16;
             this.SellAllNowProfitTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // SellAllBTCButton
             // 
             this.SellAllBTCButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.SellAllBTCButton.Location = new System.Drawing.Point(1031, 63);
+            this.SellAllBTCButton.Location = new System.Drawing.Point(1055, 63);
             this.SellAllBTCButton.Name = "SellAllBTCButton";
             this.SellAllBTCButton.Size = new System.Drawing.Size(30, 26);
             this.SellAllBTCButton.TabIndex = 30;
@@ -405,7 +443,7 @@
             // 
             this.IgnoreLossCheckBox.AutoSize = true;
             this.IgnoreLossCheckBox.CheckAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.IgnoreLossCheckBox.Location = new System.Drawing.Point(986, 3);
+            this.IgnoreLossCheckBox.Location = new System.Drawing.Point(1006, 0);
             this.IgnoreLossCheckBox.Name = "IgnoreLossCheckBox";
             this.IgnoreLossCheckBox.Size = new System.Drawing.Size(76, 31);
             this.IgnoreLossCheckBox.TabIndex = 26;
@@ -430,7 +468,7 @@
             // 
             // UpdateIntervalNumericUpDown
             // 
-            this.UpdateIntervalNumericUpDown.Location = new System.Drawing.Point(803, 69);
+            this.UpdateIntervalNumericUpDown.Location = new System.Drawing.Point(827, 69);
             this.UpdateIntervalNumericUpDown.Maximum = new decimal(new int[] {
             999,
             0,
@@ -456,7 +494,7 @@
             // Label6
             // 
             this.Label6.AutoSize = true;
-            this.Label6.Location = new System.Drawing.Point(803, 54);
+            this.Label6.Location = new System.Drawing.Point(827, 54);
             this.Label6.Name = "Label6";
             this.Label6.Size = new System.Drawing.Size(42, 13);
             this.Label6.TabIndex = 22;
@@ -466,7 +504,7 @@
             // 
             this.Label3.AutoSize = true;
             this.Label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label3.Location = new System.Drawing.Point(1073, 45);
+            this.Label3.Location = new System.Drawing.Point(1100, 34);
             this.Label3.Name = "Label3";
             this.Label3.Size = new System.Drawing.Size(36, 39);
             this.Label3.TabIndex = 17;
@@ -475,7 +513,7 @@
             // PauseButton
             // 
             this.PauseButton.Image = global::Bitcoin_Transaction_Log.Properties.Resources.Pause;
-            this.PauseButton.Location = new System.Drawing.Point(764, 59);
+            this.PauseButton.Location = new System.Drawing.Point(788, 59);
             this.PauseButton.Name = "PauseButton";
             this.PauseButton.Size = new System.Drawing.Size(30, 30);
             this.PauseButton.TabIndex = 15;
@@ -488,7 +526,7 @@
             // 
             this.Label2.AutoSize = true;
             this.Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label2.Location = new System.Drawing.Point(553, 45);
+            this.Label2.Location = new System.Drawing.Point(582, 45);
             this.Label2.Name = "Label2";
             this.Label2.Size = new System.Drawing.Size(36, 39);
             this.Label2.TabIndex = 14;
@@ -512,23 +550,11 @@
             // 
             this.Label1.AutoSize = true;
             this.Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label1.Location = new System.Drawing.Point(514, 10);
+            this.Label1.Location = new System.Drawing.Point(538, 10);
             this.Label1.Name = "Label1";
             this.Label1.Size = new System.Drawing.Size(318, 29);
             this.Label1.TabIndex = 11;
             this.Label1.Text = "Current Coinbase BTC Price";
-            // 
-            // CurrPriceBTCTextBox
-            // 
-            this.CurrPriceBTCTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurrPriceBTCTextBox.Location = new System.Drawing.Point(595, 42);
-            this.CurrPriceBTCTextBox.MaxLength = 20;
-            this.CurrPriceBTCTextBox.Name = "CurrPriceBTCTextBox";
-            this.CurrPriceBTCTextBox.ReadOnly = true;
-            this.CurrPriceBTCTextBox.Size = new System.Drawing.Size(163, 47);
-            this.CurrPriceBTCTextBox.TabIndex = 10;
-            this.CurrPriceBTCTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.CurrPriceBTCTextBox.TextChanged += new System.EventHandler(this.CurrPriceBTCTextBox_TextChanged);
             // 
             // AboutButton
             // 
@@ -569,7 +595,7 @@
             this.DataGridView1.Location = new System.Drawing.Point(0, 100);
             this.DataGridView1.Name = "DataGridView1";
             this.DataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.DataGridView1.Size = new System.Drawing.Size(1334, 783);
+            this.DataGridView1.Size = new System.Drawing.Size(1361, 783);
             this.DataGridView1.TabIndex = 11;
             this.DataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellValueChanged);
             this.DataGridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DataGridView1_MouseDown);
@@ -578,10 +604,14 @@
             // 
             this.BuySellColumn.FillWeight = 80F;
             this.BuySellColumn.HeaderText = "Transaction";
-            this.BuySellColumn.MaxInputLength = 10;
+            this.BuySellColumn.Items.AddRange(new object[] {
+            "BUY",
+            "SELL",
+            "GAIN",
+            "LOSS"});
+            this.BuySellColumn.MaxDropDownItems = 4;
             this.BuySellColumn.Name = "BuySellColumn";
-            this.BuySellColumn.ReadOnly = true;
-            this.BuySellColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.BuySellColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.BuySellColumn.ToolTipText = "Type of transaction";
             // 
             // DateTimeColumn
@@ -697,10 +727,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1334, 883);
+            this.ClientSize = new System.Drawing.Size(1361, 883);
             this.Controls.Add(this.DataGridView1);
             this.Controls.Add(this.Panel1);
-            this.MinimumSize = new System.Drawing.Size(1342, 215);
+            this.MinimumSize = new System.Drawing.Size(1369, 215);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Bitcoin Transaction Log";
@@ -709,6 +739,7 @@
             this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.Panel1.ResumeLayout(false);
             this.Panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BreakEvenPriceButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdateLight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SellAllProfitInfoButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BitcoinPictureBox2)).EndInit();
@@ -759,13 +790,14 @@
         internal System.Windows.Forms.Button alertsButton;
         internal System.Windows.Forms.Button minimizeToTrayButton;
         internal System.Windows.Forms.NotifyIcon NotifyIcon1;
-        internal System.Windows.Forms.Label Label5;
-        internal System.Windows.Forms.CheckBox FeeAfterCheckBox;
-        internal System.Windows.Forms.CheckBox FeeBeforeCheckBox;
         internal System.Windows.Forms.TextBox SellAllBreakEvenTextBox;
         internal System.Windows.Forms.Label label13;
         internal System.Windows.Forms.Label label14;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BuySellColumn;
+        internal System.Windows.Forms.PictureBox BreakEvenPriceButton;
+        internal System.Windows.Forms.Label Label5;
+        internal System.Windows.Forms.CheckBox FeeAfterCheckBox;
+        internal System.Windows.Forms.CheckBox FeeBeforeCheckBox;
+        private System.Windows.Forms.DataGridViewComboBoxColumn BuySellColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateTimeColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn BTCColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn USDColumn;
@@ -776,5 +808,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn BreakEvenPointColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn DisabledColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn CommentsColumn;
+        internal System.Windows.Forms.TextBox ProfitPercentTextBox;
     }
 }

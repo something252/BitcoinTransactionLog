@@ -41,6 +41,7 @@ namespace Bitcoin_Transaction_Log
             Icon = Properties.Resources.icon50;
             SellAllBTCButton.BackgroundImage = Properties.Resources.Simple_Information;
             SellAllProfitInfoButton.BackgroundImage = Properties.Resources.Simple_Information;
+            BreakEvenPriceButton.BackgroundImage = Properties.Resources.Simple_Information;
             BitcoinPictureBox1.BackgroundImage = Properties.Resources.bitcoin2;
             BitcoinPictureBox2.BackgroundImage = Properties.Resources.bitcoin2;
 
@@ -177,7 +178,7 @@ namespace Bitcoin_Transaction_Log
         /// </summary>
         private void NewBuyButton_Click(object sender, EventArgs e)
         {
-            OpenNewNewBuySell(0, "New Sell");
+            OpenNewNewBuySell(0, "New Buy");
         }
 
         /// <summary>
@@ -185,7 +186,7 @@ namespace Bitcoin_Transaction_Log
         /// </summary>
         private void NewSellButton_Click(object sender, EventArgs e)
         {
-            OpenNewNewBuySell(1, "New Buy");
+            OpenNewNewBuySell(1, "New Sell");
         }
 
         /// <summary>
@@ -302,6 +303,20 @@ namespace Bitcoin_Transaction_Log
             }
         }
 
+        delegate void SetTitle_Callback(string text);
+        /// <summary>
+        /// Change form's title.
+        /// </summary>
+        private void SetTitle(string text)
+        {
+            if (mainForm.InvokeRequired) {
+                SetTitle_Callback d = new SetTitle_Callback(SetTitle);
+                this.Invoke(d, new object[] { text });
+            } else {
+                this.Text = text;
+            }
+        }
+
         public delegate void ComboBoxItemsAdd_Callback(string ComboBoxRef, string text);
         /// <summary>
         /// Add a ComboBox Item from within a thread.
@@ -344,6 +359,9 @@ namespace Bitcoin_Transaction_Log
             if (success) {
                 UpdateTotalPossibleProfit(ref TotalBTC, ref BuyUSD, ref SellUSD); // update total potential profit display
                 UpdateBreakEven(ref TotalBTC, ref BuyUSD, ref SellUSD); // update break-even price display
+            }
+            if (InTrayFlag) {
+                NotifyIcon1.Text = CurrPriceBTCTextBox.Text;
             }
         }
 
@@ -428,34 +446,36 @@ namespace Bitcoin_Transaction_Log
         /// </summary>
         private void SellAllBTCButton_Click(object sender, EventArgs e)
         {
-            decimal TotalBTC = 0m;
-            decimal CurrPriceBTC = 0m;
-            decimal Fee = 0m;
+            decimal totalBTC = 0m;
+            decimal currPriceBTC = 0m;
+            decimal fee = 0m;
             string SellAllNowProfitFee = "0";
             decimal temp = 0m;
+            decimal result = 0m;
 
             try {
                 lock (LockUpdates) {
-                    ComputeTotalBTCandUSD(ref TotalBTC);
+                    ComputeTotalBTCandUSD(ref totalBTC);
 
-                    if (TotalBTC > 0) {
+                    if (totalBTC > 0) {
                         if (IsNumeric(SellAllNowProfitFeeTextBox.Text)) {
-                            Fee = Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m;
+                            fee = 1m - ((Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m));
                             SellAllNowProfitFee = SellAllNowProfitFeeTextBox.Text;
                         }
                         if (IsNumeric(CurrPriceBTCTextBox.Text)) {
-                            CurrPriceBTC = Convert.ToDecimal(CurrPriceBTCTextBox.Text);
+                            currPriceBTC = Convert.ToDecimal(CurrPriceBTCTextBox.Text);
                         }
-                        temp = TotalBTC * CurrPriceBTC;
+                        temp = totalBTC * currPriceBTC;
+                        result = temp * fee;
                     }
                 }
 
-                if (TotalBTC > 0) {
-                    MessageBox.Show(TotalBTC + "BTC * $" + CurrPriceBTC + " - $" + Convert.ToString(temp * Fee) + " = $" + Convert.ToString(temp - (temp * Fee)) + Environment.NewLine + Environment.NewLine +
-                    "Total BTC * Current BTC Price - " + (temp * Fee) + " (" + SellAllNowProfitFee + "% Fee) = Total Revenue");
-                } else if (TotalBTC < 0) {
-                    MessageBox.Show("Total Bitcoins is less than zero: " + TotalBTC);
-                } else if (TotalBTC == 0) {
+                if (totalBTC > 0) {
+                    MessageBox.Show("(" + totalBTC + "BTC * $" + currPriceBTC + ") * " + fee + " = $" + result + Environment.NewLine + Environment.NewLine +
+                    "(Total BTC * Current BTC Price) * Fee Multiplier (" + SellAllNowProfitFee + "%) = Total Revenue");
+                } else if (totalBTC < 0) {
+                    MessageBox.Show("Total Bitcoins is less than zero: " + totalBTC);
+                } else {
                     MessageBox.Show("Total bitcoins = 0");
                 }
             } catch {
@@ -474,9 +494,9 @@ namespace Bitcoin_Transaction_Log
                         decimal temp = Convert.ToDecimal(TotalBitcoinsTextBox.Text) * Convert.ToDecimal(CurrPriceBTCTextBox.Text);
                         decimal Fee = 0m;
                         if (IsNumeric(SellAllNowProfitFeeTextBox.Text)) {
-                            Fee = Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m;
+                            Fee = 1m - ((Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m));
                         }
-                        SetText("SellAllNowRevenueTextBox", Convert.ToString(Math.Round(temp - (temp * Fee), 2)));
+                        SetText("SellAllNowRevenueTextBox", Convert.ToString(Math.Round(temp * Fee, 2)));
                     } else {
                         SetText("SellAllNowRevenueTextBox", "0");
                     }
@@ -494,22 +514,64 @@ namespace Bitcoin_Transaction_Log
             lock (LockUpdates) {
                 if (TotalBTC > 0m) {
                     try {
-                        decimal averageCost = Math.Abs(SellUSD - BuyUSD) / (TotalBTC);
+                        decimal averageCost = 0m;
+                        averageCost = (BuyUSD - SellUSD) / (TotalBTC);
                         decimal fee = 0m;
                         if (IsNumeric(SellAllNowProfitFeeTextBox.Text)) {
                             fee = 1 - (Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m);
                         }
 
-                        if (fee != 0m)
+                        if (fee > 0m)
                             SetText("SellAllBreakEvenTextBox", Convert.ToString(Math.Round(averageCost / fee, 2)));
                         else
-                            SetText("SellAllBreakEvenTextBox", Convert.ToString(Math.Round(averageCost, 2)));
+                            SetText("SellAllBreakEvenTextBox", "None");
                     } catch {
                         SetText("SellAllBreakEvenTextBox", "--");
                     }
                 } else {
                     SetText("SellAllBreakEvenTextBox", "--");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Break-even show work button.
+        /// </summary>
+        private void BreakEvenPriceButton_Click(object sender, EventArgs e)
+        {
+            decimal BuyUSD = 0m;
+            decimal SellUSD = 0m;
+            decimal totalBTC = 0m;
+            string feeText = "";
+            lock (LockUpdates) {
+                try {
+                    ComputeTotalBTCandUSD(ref totalBTC, ref BuyUSD, ref SellUSD);
+                    feeText = SellAllNowProfitFeeTextBox.Text;
+                } catch (Exception ex) {
+                    MessageBox.Show("Error: " + ex.GetType());
+                }
+            }
+
+            if (totalBTC > 0m) {
+                try {
+                    decimal averageCost = Math.Abs(SellUSD - BuyUSD) / (totalBTC);
+                    decimal fee = 0m;
+                    if (IsNumeric(feeText)) {
+                        fee = 1 - (Convert.ToDecimal(feeText) / 100m);
+                    }
+
+                    if (fee > 0m) {
+                        decimal result = averageCost / fee;
+                        MessageBox.Show("[(" + BuyUSD + " - " + SellUSD + ") / " + totalBTC + "] " + " / " + fee + " = " + result + Environment.NewLine + Environment.NewLine +
+                                        "[(Buy USD - Sell USD) / Total BTC] / Fee Multiplier = " + result);
+                    } else {
+                        MessageBox.Show("None");
+                    }
+                } catch (Exception ex) {
+                    MessageBox.Show("Error: " + ex.GetType());
+                }
+            } else {
+                MessageBox.Show("Unable to calculate. Total bitcoins = 0");
             }
         }
 
@@ -523,19 +585,35 @@ namespace Bitcoin_Transaction_Log
                     try {
                         if (!IsNumeric(CurrPriceBTCTextBox.Text)) {
                             SetText("SellAllNowProfitTextBox", "0");
+                            SetText("ProfitPercentTextBox", "0");
                         } else {
                             // add total profit columns together
                             decimal Fee = 1m;
                             if (IsNumeric(SellAllNowProfitFeeTextBox.Text)) {
-                                Fee = (1 - Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100);
+                                Fee = 1m - (Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m);
                             }
-                            SetText("SellAllNowProfitTextBox", Convert.ToString(Math.Round(((TotalBTC * Convert.ToDecimal(CurrPriceBTCTextBox.Text)) * Fee) + (SellUSD - BuyUSD), 2)));
+                            decimal part1 = ((TotalBTC * Convert.ToDecimal(CurrPriceBTCTextBox.Text)) * Fee);
+
+                            SetText("SellAllNowProfitTextBox", Convert.ToString(Math.Round(part1 + (SellUSD - BuyUSD), 2)));
+
+                            decimal resultPercent;
+                            if (BuyUSD != 0)
+                                resultPercent = Math.Round((((part1 + SellUSD) / BuyUSD) - 1m) * 100m, 2);
+                            else
+                                resultPercent = 0m;
+
+                            if (resultPercent > 0m)
+                                SetText("ProfitPercentTextBox", "+" + Convert.ToString(resultPercent) + "%");
+                            else
+                                SetText("ProfitPercentTextBox", Convert.ToString(resultPercent) + "%");
                         }
                     } catch {
                         SetText("SellAllNowProfitTextBox", "--");
+                        SetText("ProfitPercentTextBox", "--");
                     }
                 } else {
                     SetText("SellAllNowProfitTextBox", "0");
+                    SetText("ProfitPercentTextBox", "0");
                 }
             }
         }
@@ -562,9 +640,18 @@ namespace Bitcoin_Transaction_Log
                             Fee = 1m - (Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m);
                         }
                     }
+                    decimal part1 = ((TotalBTC * Convert.ToDecimal(CurrPriceBTCTextBox.Text)) * Fee);
+                    decimal resultPercent;
+                    if (BuyUSD != 0)
+                        resultPercent = Math.Round((((part1 + SellUSD) / BuyUSD) - 1m) * 100m, 2);
+                    else
+                        resultPercent = 0m;
+
                     MessageBox.Show("[ ( " + TotalBTC + " BTC * $" + CurrPriceBTC + " ) * " + Fee + " ] + ( $" + SellUSD + " - $" + BuyUSD + " ) = $" +
-                            Math.Round(((TotalBTC * CurrPriceBTC) * Fee) + (SellUSD - BuyUSD), 2) + Environment.NewLine + Environment.NewLine +
-                            "[ ( Total BTC * Current BTC price ) * (Fee multiplier) ] + ( Sell USD - Buy USD ) = Total Profit");
+                            Math.Round(((TotalBTC * CurrPriceBTC) * Fee) + (SellUSD - BuyUSD), 2) + Environment.NewLine +
+                            "[ ( Total BTC * Current BTC Price ) * Fee Multiplier ] + ( Sell USD - Buy USD ) = Total Profit" + Environment.NewLine + Environment.NewLine +
+                            "( [ ( [ ( " + TotalBTC + " BTC * $" + CurrPriceBTC + " ) * " + Fee + " ] + " + SellUSD + " ) / " + BuyUSD + " ] - 1 ) * 100 = " + resultPercent + Environment.NewLine +
+                            "( [ ( [ ( Total BTC * Current BTC Price ) * Fee Multiplier ] + Sell USD ) / Buy USD ] - 1 ) * 100 = Percentage Change");
                 } catch {
                     MessageBox.Show("Unable to calculate.");
                 }
@@ -851,9 +938,11 @@ namespace Bitcoin_Transaction_Log
         }
 
         bool MinimizeButtonFlag = false;
+        bool InTrayFlag = false;
         private void minimizeToTrayButton_Click(object sender, EventArgs e)
         {
             NotifyIcon1.Icon = Properties.Resources.icon50;
+            NotifyIcon1.Text = CurrPriceBTCTextBox.Text;
             MinimizeButtonFlag = true;
             WindowState = FormWindowState.Minimized;
 
@@ -871,10 +960,12 @@ namespace Bitcoin_Transaction_Log
         {
             if (MinimizeButtonFlag) { // only when "minimize to tray" button is used and not standard minimizing
                 MinimizeButtonFlag = false;
+                InTrayFlag = true;
                 NotifyIcon1.Visible = true;
                 Hide();
             } else if (WindowState == FormWindowState.Normal) {
                 NotifyIcon1.Visible = false;
+                InTrayFlag = false;
             }
         }
 

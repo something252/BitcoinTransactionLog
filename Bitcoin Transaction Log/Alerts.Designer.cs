@@ -93,7 +93,7 @@
             // removeButton1
             // 
             this.removeButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.removeButton1.Location = new System.Drawing.Point(18, 291);
+            this.removeButton1.Location = new System.Drawing.Point(18, 287);
             this.removeButton1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.removeButton1.Name = "removeButton1";
             this.removeButton1.Size = new System.Drawing.Size(327, 44);
@@ -174,7 +174,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(363, 338);
+            this.ClientSize = new System.Drawing.Size(363, 334);
             this.Controls.Add(this.toggleAlertsButton);
             this.Controls.Add(this.removeButton1);
             this.Controls.Add(this.label3);
@@ -188,7 +188,7 @@
             this.Controls.Add(this.addListBox1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.MaximumSize = new System.Drawing.Size(371, 9000);
+            this.MaximumSize = new System.Drawing.Size(3371, 9000);
             this.MinimumSize = new System.Drawing.Size(371, 232);
             this.Name = "Alerts";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
