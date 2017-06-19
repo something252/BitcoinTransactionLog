@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -24,7 +25,12 @@ namespace Bitcoin_Transaction_Log
 
         private void NewBuySell_Load(object sender, EventArgs e)
         {
-            Icon = Properties.Resources.icon50;
+            if (mainForm.CryptoList.CurrentCryptoType == "ETH")
+                Icon = Properties.Resources.Ethereum32icon;
+            else if (mainForm.CryptoList.CurrentCryptoType == "LTC")
+                Icon = Properties.Resources.Litecoin32icon;
+            else
+                Icon = Properties.Resources.Bitcoin50;
 
             ComboBox1.Items.Add("BUY");
             ComboBox1.Items.Add("SELL");
@@ -38,8 +44,11 @@ namespace Bitcoin_Transaction_Log
                 Label2.Text = mainForm.CurrencyTypeComboBox.Text;
             }
 
+            Label1.Text = mainForm.CryptoList.CurrentCryptoType;
+            Label4.Text = Label4.Text.Replace("BTC", mainForm.CryptoList.CurrentCryptoType);
+
             if (IsNumeric(mainForm.SellAllNowProfitFeeTextBox.Text)) {
-                FeeChargedTextBox.Text = mainForm.SellAllNowProfitFeeTextBox.Text;
+                FeePercentTextBox.Text = mainForm.SellAllNowProfitFeeTextBox.Text;
             }
 
             Loading = false;
@@ -49,8 +58,11 @@ namespace Bitcoin_Transaction_Log
         {
 
             if (Convert.ToString(ComboBox1.SelectedItem) == "LOSS" || Convert.ToString(ComboBox1.SelectedItem) == "GAIN") {
-                FeeChargedTextBox.Text = "";
-                FeeChargedTextBox.Enabled = false;
+                FeeAmountTextBox.Text = "";
+                FeeAmountTextBox.Enabled = false;
+
+                FeePercentTextBox.Text = "";
+                FeePercentTextBox.Enabled = false;
 
                 BTCExchangeRateTextBox.Text = "";
                 BTCExchangeRateTextBox.Enabled = false;
@@ -60,7 +72,8 @@ namespace Bitcoin_Transaction_Log
 
                 BTCExchangerateLockCheckBox.Enabled = false;
             } else {
-                FeeChargedTextBox.Enabled = true;
+                FeeAmountTextBox.Enabled = true;
+                FeePercentTextBox.Enabled = true;
                 BTCExchangeRateTextBox.Enabled = true;
                 USDTextBox.Enabled = true;
                 BTCExchangerateLockCheckBox.Enabled = true;
@@ -73,27 +86,30 @@ namespace Bitcoin_Transaction_Log
         private void ConfirmButton_Click(object sender, EventArgs e)
         {
             if (Convert.ToString(ComboBox1.SelectedItem) == "BUY" || Convert.ToString(ComboBox1.SelectedItem) == "SELL") {
+                if (string.IsNullOrEmpty(FeePercentTextBox.Text)) {
+                    FeePercentTextBox.Text = "0";
+                }
+
                 if (!IsNumeric(BTCTextBox.Text)) {
-                    MessageBox.Show("BTC TextBox is not numeric!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Interaction.MsgBox(Label1.Text + " TextBox is not numeric!", MsgBoxStyle.Critical, "Warning");
                 } else if (!IsNumeric(USDTextBox.Text)) {
-                    MessageBox.Show("USD TextBox is not numeric!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                } else if (!IsNumeric(FeeChargedTextBox.Text)) {
-                    MessageBox.Show("Fee Charged TextBox is not numeric!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Interaction.MsgBox(Label2.Text + " TextBox is not numeric!", MsgBoxStyle.Critical, "Warning");
+                } else if (!IsNumeric(FeePercentTextBox.Text)) {
+                    Interaction.MsgBox("Fee Charged TextBox is not numeric!", MsgBoxStyle.Critical, "Warning");
                 } else if (!IsNumeric(BTCExchangeRateTextBox.Text)) {
-                    MessageBox.Show("BTC Exchange Rate TextBox is not numeric!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                } else { // all is well
+                    Interaction.MsgBox(Label1.Text + " Exchange Rate TextBox is not numeric!", MsgBoxStyle.Critical, "Warning");
+                } else {
                     CreateRow();
                 }
             } else if (Convert.ToString(ComboBox1.SelectedItem) == "LOSS" || Convert.ToString(ComboBox1.SelectedItem) == "GAIN") {
                 if (!IsNumeric(BTCTextBox.Text)) {
-                    MessageBox.Show("BTC TextBox is not numeric!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Interaction.MsgBox(Label1.Text + " TextBox is not numeric!", MsgBoxStyle.Critical, "Warning");
                     //} else if (!IsNumeric(USDTextBox.Text)) {
-                    //    MessageBox.Show("USD TextBox is not numeric!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                } else { // all is well
+                    //    Interaction.MsgBox(Label2.Text + " TextBox is not numeric!", "Warning", MsgBoxStyle.Critical, "Warning");
+                } else {
                     CreateRow();
                 }
             }
-
         }
 
         private void CreateRow()
@@ -104,52 +120,90 @@ namespace Bitcoin_Transaction_Log
             } else {
                 Meridiem = "PM";
             }
-            string BTCTextBoxTemp = BTCTextBox.Text;
-            string USDTextBoxTemp = USDTextBox.Text;
-            string FeeTextBoxTemp = FeeChargedTextBox.Text;
-            string BTCExchangeRateTextBoxTemp = BTCExchangeRateTextBox.Text;
 
             mainForm.DataGridView1.Rows.Add(ComboBox1.SelectedItem, DateTimePicker1.Value.Month + "/" + DateTimePicker1.Value.Day + "/" + DateTimePicker1.Value.Year
                                            + " " + DateTimePicker2.Value.Hour + ":" + DateTimePicker2.Value.Minute + ":" + DateTimePicker2.Value.Second + " " + Meridiem,
-                                           BTCTextBoxTemp,
-                                           USDTextBoxTemp,
-                                           FeeTextBoxTemp,
-                                           BTCExchangeRateTextBoxTemp);
+                                           BTCTextBox.Text,
+                                           USDTextBox.Text,
+                                           FeeAmountTextBox.Text,
+                                           FeePercentTextBox.Text,
+                                           BTCExchangeRateTextBox.Text);
             mainForm.PerformUpdates();
 
             this.Close();
         }
 
+        bool TextChanged_Locked = false;
         private void BTCAndUSD_TextChanged(object sender, EventArgs e)
         {
-            if (Convert.ToString(ComboBox1.SelectedItem) != "LOSS" && Convert.ToString(ComboBox1.SelectedItem) != "GAIN") {
-                if (BTCExchangerateLockCheckBox.Checked) {
-                    decimal btc = 0m;
-                    if (IsNumeric(BTCTextBox.Text)) {
-                        btc = Convert.ToDecimal(BTCTextBox.Text);
-                    }
-                    decimal usd = 0m;
-                    if (IsNumeric(USDTextBox.Text)) {
-                        usd = Convert.ToDecimal(USDTextBox.Text);
-                    }
-                    decimal feeMultiplier = 1m;
-                    if (IsNumeric(FeeChargedTextBox.Text)) {
-                        feeMultiplier = 1m - (Convert.ToDecimal(FeeChargedTextBox.Text) / 100m);
-                    }
+            if (!TextChanged_Locked) {
+                TextChanged_Locked = true;
 
-                    try {
-                        if (btc == 0m || feeMultiplier == 0m)
-                            BTCExchangeRateTextBox.Text = "0.0";
-                        else
-                            BTCExchangeRateTextBox.Text = Convert.ToString(Math.Round((1m / btc) * (usd / feeMultiplier), 2));
-                    } catch {
-                        BTCExchangeRateTextBox.Text = "Error";
+                try {
+                    if (Convert.ToString(ComboBox1.SelectedItem) != "LOSS" && Convert.ToString(ComboBox1.SelectedItem) != "GAIN") {
+                        decimal btc = 0m;
+                        if (IsNumeric(BTCTextBox.Text)) {
+                            btc = Convert.ToDecimal(BTCTextBox.Text);
+                        }
+                        decimal usd = 0m;
+                        if (IsNumeric(USDTextBox.Text)) {
+                            usd = Convert.ToDecimal(USDTextBox.Text);
+                        }
+                        decimal exchangeRate = 0m;
+                        if (IsNumeric(BTCExchangeRateTextBox.Text)) {
+                            exchangeRate = Convert.ToDecimal(BTCExchangeRateTextBox.Text);
+                        }
+
+                        if (!BTCExchangerateLockCheckBox.Checked) {
+
+                            if (sender.Equals(BTCTextBox)) {
+                                if (!string.IsNullOrEmpty(BTCExchangeRateTextBox.Text)) {
+                                    try {
+                                        USDTextBox.Text = Convert.ToString(Math.Round((btc * exchangeRate), 5));
+                                    } catch {
+                                        USDTextBox.Text = "Error";
+                                    }
+                                }
+                            } else if (sender.Equals(USDTextBox)) {
+                                try {
+                                    if (btc == 0m)
+                                        BTCExchangeRateTextBox.Text = "0.0";
+                                    else
+                                        BTCExchangeRateTextBox.Text = Convert.ToString(Math.Round((1m / btc) * (usd), 2));
+                                } catch {
+                                    BTCExchangeRateTextBox.Text = "Error";
+                                }
+                            }
+
+                            try {
+                                if (IsNumeric(USDTextBox.Text)) {
+                                    FeeAmountTextBox.Text = Convert.ToString(Math.Round(usd * (Convert.ToDecimal(FeePercentTextBox.Text) / 100m), 2));
+                                } else {
+                                    FeeAmountTextBox.Text = "";
+                                }
+                            } catch {
+                                FeeAmountTextBox.Text = "Error";
+                            }
+
+                        } else {
+
+                            try {
+                                if (btc == 0m)
+                                    BTCExchangeRateTextBox.Text = "0.0";
+                                else
+                                    BTCExchangeRateTextBox.Text = Convert.ToString(Math.Round((1m / btc) * (usd), 2));
+                            } catch {
+                                BTCExchangeRateTextBox.Text = "Error";
+                            }
+
+                        }
+
+                        UpdateFeeAmountTextBox();
                     }
-                } else {
-                    if (sender == FeeChargedTextBox) {
-                        BTCExchangeRateTextBox_TextChanged(BTCExchangeRateTextBox, e);
-                    }
+                } catch {
                 }
+
+                TextChanged_Locked = false;
             }
         }
 
@@ -167,39 +221,52 @@ namespace Bitcoin_Transaction_Log
 
         private void BTCExchangeRateTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (Convert.ToString(ComboBox1.SelectedItem) != "LOSS" && Convert.ToString(ComboBox1.SelectedItem) != "GAIN") {
-                if (!BTCExchangerateLockCheckBox.Checked) {
-                    if (!string.IsNullOrEmpty(BTCTextBox.Text)) {
-                        decimal btc;
-                        if (IsNumeric(BTCTextBox.Text)) {
-                            btc = Convert.ToDecimal(BTCTextBox.Text);
-                        } else {
-                            btc = 0m;
-                        }
-                        decimal exRate;
-                        if (IsNumeric(BTCExchangeRateTextBox.Text)) {
-                            exRate = Convert.ToDecimal(BTCExchangeRateTextBox.Text);
-                        } else {
-                            exRate = 0m;
-                        }
-                        decimal fee;
-                        if (IsNumeric(FeeChargedTextBox.Text)) {
-                            fee = 1m - (Convert.ToDecimal(FeeChargedTextBox.Text) / 100m);
-                        } else {
-                            fee = 1m;
-                        }
+            if (!TextChanged_Locked) {
+                TextChanged_Locked = true;
 
-                        try {
-                            if (btc != 0m) {
-                                USDTextBox.Text = Convert.ToString((exRate / (1m / btc)) * fee);
-                            } else {
-                                USDTextBox.Text = "0.0";
+                try {
+                    if (Convert.ToString(ComboBox1.SelectedItem) != "LOSS" && Convert.ToString(ComboBox1.SelectedItem) != "GAIN") {
+                        if (!BTCExchangerateLockCheckBox.Checked) {
+                            if (!string.IsNullOrEmpty(BTCTextBox.Text)) {
+                                decimal btc;
+                                if (IsNumeric(BTCTextBox.Text)) {
+                                    btc = Convert.ToDecimal(BTCTextBox.Text);
+                                } else {
+                                    btc = 0m;
+                                }
+                                decimal exRate;
+                                if (IsNumeric(BTCExchangeRateTextBox.Text)) {
+                                    exRate = Convert.ToDecimal(BTCExchangeRateTextBox.Text);
+                                } else {
+                                    exRate = 0m;
+                                }
+                                try {
+                                    if (btc != 0m) {
+                                        USDTextBox.Text = Convert.ToString(Math.Round((exRate / (1m / btc)), 5));
+                                    } else {
+                                        USDTextBox.Text = "0.0";
+                                    }
+                                } catch { // System.OverflowException
+                                    USDTextBox.Text = "Too Large";
+                                }
+                                UpdateFeeAmountTextBox();
                             }
-                        } catch { // System.OverflowException
-                            USDTextBox.Text = "Too Large";
                         }
                     }
+                } catch (Exception ex) {
+                    Interaction.MsgBox(ex.Message);
                 }
+
+                TextChanged_Locked = false;
+            }
+        }
+
+        private void UpdateFeeAmountTextBox()
+        {
+            try {
+                FeeAmountTextBox.Text = Convert.ToString(Math.Round(Convert.ToDecimal(USDTextBox.Text) * (Convert.ToDecimal(FeePercentTextBox.Text) / 100m), 4));
+            } catch {
+                FeeAmountTextBox.Text = "";
             }
         }
     }

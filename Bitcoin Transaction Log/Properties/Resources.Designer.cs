@@ -71,6 +71,36 @@ namespace Bitcoin_Transaction_Log.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Bitcoin50 {
+            get {
+                object obj = ResourceManager.GetObject("Bitcoin50", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Ethereum32 {
+            get {
+                object obj = ResourceManager.GetObject("Ethereum32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Ethereum32icon {
+            get {
+                object obj = ResourceManager.GetObject("Ethereum32icon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap green_light32 {
@@ -91,11 +121,21 @@ namespace Bitcoin_Transaction_Log.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Litecoin32 {
+            get {
+                object obj = ResourceManager.GetObject("Litecoin32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon icon50 {
+        internal static System.Drawing.Icon Litecoin32icon {
             get {
-                object obj = ResourceManager.GetObject("icon50", resourceCulture);
+                object obj = ResourceManager.GetObject("Litecoin32icon", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

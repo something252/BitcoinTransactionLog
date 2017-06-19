@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -115,7 +116,7 @@ namespace Bitcoin_Transaction_Log
                 Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=NGU2F9HPW2BEG");
             }
             catch (Exception) {
-                MessageBox.Show("Failed to open link.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Interaction.MsgBox("Failed to open link.", Microsoft.VisualBasic.MsgBoxStyle.Critical, "Warning");
                 throw;
             }
         }

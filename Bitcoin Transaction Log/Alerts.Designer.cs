@@ -53,7 +53,7 @@
             this.addListBox1.Name = "addListBox1";
             this.addListBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.addListBox1.Size = new System.Drawing.Size(160, 184);
-            this.addListBox1.TabIndex = 0;
+            this.addListBox1.TabIndex = 5;
             this.addListBox1.SelectedIndexChanged += new System.EventHandler(this.addListBox1_SelectedIndexChanged);
             // 
             // label1
@@ -87,7 +87,7 @@
             this.addListBox2.Name = "addListBox2";
             this.addListBox2.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.addListBox2.Size = new System.Drawing.Size(160, 184);
-            this.addListBox2.TabIndex = 2;
+            this.addListBox2.TabIndex = 6;
             this.addListBox2.SelectedIndexChanged += new System.EventHandler(this.addListBox2_SelectedIndexChanged);
             // 
             // removeButton1
@@ -97,7 +97,7 @@
             this.removeButton1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.removeButton1.Name = "removeButton1";
             this.removeButton1.Size = new System.Drawing.Size(327, 44);
-            this.removeButton1.TabIndex = 4;
+            this.removeButton1.TabIndex = 7;
             this.removeButton1.Text = "Remove Selected";
             this.toolTip1.SetToolTip(this.removeButton1, "Remove selected list items");
             this.removeButton1.UseVisualStyleBackColor = true;
@@ -110,7 +110,8 @@
             this.addTextBox2.MaxLength = 20;
             this.addTextBox2.Name = "addTextBox2";
             this.addTextBox2.Size = new System.Drawing.Size(106, 24);
-            this.addTextBox2.TabIndex = 6;
+            this.addTextBox2.TabIndex = 3;
+            this.addTextBox2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.addTextBox2_KeyDown);
             // 
             // addButton2
             // 
@@ -119,7 +120,7 @@
             this.addButton2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.addButton2.Name = "addButton2";
             this.addButton2.Size = new System.Drawing.Size(54, 24);
-            this.addButton2.TabIndex = 7;
+            this.addButton2.TabIndex = 4;
             this.addButton2.Text = "Add";
             this.toolTip1.SetToolTip(this.addButton2, "Add value to list");
             this.addButton2.UseVisualStyleBackColor = true;
@@ -132,7 +133,7 @@
             this.addButton1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.addButton1.Name = "addButton1";
             this.addButton1.Size = new System.Drawing.Size(54, 24);
-            this.addButton1.TabIndex = 9;
+            this.addButton1.TabIndex = 2;
             this.addButton1.Text = "Add";
             this.toolTip1.SetToolTip(this.addButton1, "Add value to list");
             this.addButton1.UseVisualStyleBackColor = true;
@@ -145,7 +146,8 @@
             this.addTextBox1.MaxLength = 20;
             this.addTextBox1.Name = "addTextBox1";
             this.addTextBox1.Size = new System.Drawing.Size(106, 24);
-            this.addTextBox1.TabIndex = 8;
+            this.addTextBox1.TabIndex = 1;
+            this.addTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.addTextBox1_KeyDown);
             // 
             // label3
             // 
@@ -165,7 +167,7 @@
             this.toggleAlertsButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.toggleAlertsButton.Name = "toggleAlertsButton";
             this.toggleAlertsButton.Size = new System.Drawing.Size(76, 32);
-            this.toggleAlertsButton.TabIndex = 11;
+            this.toggleAlertsButton.TabIndex = 8;
             this.toggleAlertsButton.Text = "Enabled";
             this.toggleAlertsButton.UseVisualStyleBackColor = true;
             this.toggleAlertsButton.Click += new System.EventHandler(this.toggleAlertsButton_Click);
@@ -188,7 +190,7 @@
             this.Controls.Add(this.addListBox1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.MaximumSize = new System.Drawing.Size(3371, 9000);
+            this.MaximumSize = new System.Drawing.Size(371, 9000);
             this.MinimumSize = new System.Drawing.Size(371, 232);
             this.Name = "Alerts";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -211,8 +213,8 @@
         private System.Windows.Forms.Button addButton2;
         private System.Windows.Forms.Button addButton1;
         private System.Windows.Forms.TextBox addTextBox1;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button toggleAlertsButton;
         private System.Windows.Forms.ToolTip toolTip1;
+        internal System.Windows.Forms.Label label3;
     }
 }

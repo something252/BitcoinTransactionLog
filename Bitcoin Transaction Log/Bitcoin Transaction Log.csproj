@@ -49,17 +49,21 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\icon256.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>ikuuXUvIHaI0MkK30ZIO.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -92,6 +96,9 @@
     <Compile Include="Alerts.Designer.cs">
       <DependentUpon>Alerts.cs</DependentUpon>
     </Compile>
+    <Compile Include="CryptoSettings.cs" />
+    <Compile Include="CryptoMain.cs" />
+    <Compile Include="DataGridSettingsRow.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -105,6 +112,7 @@
     <Compile Include="NewBuySell.Designer.cs">
       <DependentUpon>NewBuySell.cs</DependentUpon>
     </Compile>
+    <Compile Include="PrivateSettersContractResolvers.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrayMenu.cs">
@@ -121,6 +129,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="NewBuySell.resx">
       <DependentUpon>NewBuySell.cs</DependentUpon>
@@ -138,7 +147,6 @@
     <EmbeddedResource Include="TrayMenu.resx">
       <DependentUpon>TrayMenu.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="ikuuXUvIHaI0MkK30ZIO.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -172,7 +180,7 @@
     <None Include="Resources\green_light32.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\icon50.ico" />
+    <None Include="Resources\Bitcoin50.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\icon256.ico" />
@@ -191,6 +199,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\yellow_light32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Litecoin32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ethereum32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ethereum32icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Litecoin32icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

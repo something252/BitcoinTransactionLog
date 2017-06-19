@@ -5,13 +5,8 @@ using System.Text;
 
 namespace Bitcoin_Transaction_Log
 {
-    class Methods1
+    public static class Methods1
     {
-        private Methods1()
-        {
-
-        }
-
         public static bool IsNumeric(object s)
         {
             if (s != null) {

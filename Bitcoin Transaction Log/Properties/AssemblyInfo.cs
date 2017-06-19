@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Bitcoin Transaction Log")]
-[assembly: AssemblyDescription("Program used to log buy and sell transactions of Bitcoins. Shows relevant data such as profit, revenue, and break-even points.")]
+[assembly: AssemblyDescription("Program used to log buy and sell transactions of cryptocurrencies. Displays relevant data such as current price, profit, revenue, and break-even points.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("David Plesnarski")]
 [assembly: AssemblyProduct("Bitcoin Transaction Log")]

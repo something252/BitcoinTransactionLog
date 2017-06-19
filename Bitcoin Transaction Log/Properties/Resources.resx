@@ -127,9 +127,6 @@
   <data name="icon256" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon256.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="icon50" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icon50.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Pause" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Pause.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -144,5 +141,20 @@
   </data>
   <data name="yellow_light32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\yellow_light32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Bitcoin50" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\bitcoin50.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Ethereum32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Ethereum32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Ethereum32icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Ethereum32icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Litecoin32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Litecoin32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Litecoin32icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Litecoin32icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

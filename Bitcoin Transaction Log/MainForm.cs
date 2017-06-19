@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,25 +11,31 @@ using System.Media;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 using System.Windows.Forms;
 using static Bitcoin_Transaction_Log.Methods1;
+using JsonNet.PrivateSettersContractResolvers;
+using System.Threading;
 
 namespace Bitcoin_Transaction_Log
 {
     public partial class MainForm : Form
     {
-        bool Loading = true;
+        public static bool Loading = true;
         //public LockThreadExec As new Object
         private object LockUpdates = new object();
+        private object LockPerformUpdates = new object();
 
-        const string UpdatingInProgressStr = "Bitcoin price updating is in progress.";
-        const string UpdatingPausedStr = "Bitcoin price updating is paused.";
-        const string UpdatingStoppedStr = "Bitcoin price updating is not in progress.";
+        public string UpdatingInProgressStr = CryptoMain.CryptoNames.Bitcoin + " price updating is in progress.";
+        public string UpdatingPausedStr = CryptoMain.CryptoNames.Bitcoin + " price updating is paused.";
+        public string UpdatingStoppedStr = CryptoMain.CryptoNames.Bitcoin + " price updating is not in progress.";
         delegate void UpdateLightTooltip_Delegate(Control control, string caption);
 
-        static MainForm mainForm;
-        static List<NewBuySell> newBuySell = new List<NewBuySell>();
-        static Alerts alerts;
+        public static MainForm mainForm;
+        public static List<NewBuySell> newBuySell = new List<NewBuySell>();
+        public static Alerts alerts;
+
+        public CryptoMain CryptoList = new CryptoMain();
 
         public MainForm()
         {
@@ -38,12 +45,11 @@ namespace Bitcoin_Transaction_Log
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            Icon = Properties.Resources.icon50;
             SellAllBTCButton.BackgroundImage = Properties.Resources.Simple_Information;
             SellAllProfitInfoButton.BackgroundImage = Properties.Resources.Simple_Information;
             BreakEvenPriceButton.BackgroundImage = Properties.Resources.Simple_Information;
-            BitcoinPictureBox1.BackgroundImage = Properties.Resources.bitcoin2;
-            BitcoinPictureBox2.BackgroundImage = Properties.Resources.bitcoin2;
+            CryptoPictureBox1.BackgroundImage = Properties.Resources.bitcoin2;
+            CryptoPictureBox2.BackgroundImage = Properties.Resources.bitcoin2;
 
             if (Properties.Settings.Default.MainFormSize != null) {
                 if (Properties.Settings.Default.MainFormSize.Height != 0 && Properties.Settings.Default.MainFormSize.Width != 0) {
@@ -61,46 +67,17 @@ namespace Bitcoin_Transaction_Log
             if (!string.IsNullOrEmpty(Properties.Settings.Default.MoneyType)) {
                 int index = CurrencyTypeComboBox.Items.Add(Properties.Settings.Default.MoneyType);
                 CurrencyTypeComboBox.SelectedIndex = index;
-                ChangeColumnLabelCurrency(CurrencyTypeComboBox.Text, "USD");
+                ChangeColumnLabelCurrency(CurrencyTypeComboBox.Text, "usd");
             } else {
-                int index = CurrencyTypeComboBox.Items.Add("USD");
+                int index = CurrencyTypeComboBox.Items.Add("usd");
                 CurrencyTypeComboBox.SelectedIndex = index;
-            }
-
-            if (Properties.Settings.Default.DataGridSettings != null) {
-                for (int i = 0; i < Properties.Settings.Default.DataGridSettings.Count; i++) {
-                    string[] rowValues = Properties.Settings.Default.DataGridSettings[i].Split(new[] { "<**>" }, StringSplitOptions.None);
-                    DataGridView1.Rows.Add();
-                    try {
-                        DataGridView1[0, i].Value = Convert.ToString(rowValues[0]);
-                        DataGridView1[1, i].Value = Convert.ToString(rowValues[1]);
-                        DataGridView1[2, i].Value = Convert.ToString(rowValues[2]);
-                        DataGridView1[3, i].Value = Convert.ToString(rowValues[3]);
-                        DataGridView1[4, i].Value = Convert.ToString(rowValues[4]);
-                        DataGridView1[5, i].Value = Convert.ToString(rowValues[5]);
-                        DataGridView1[6, i].Value = Convert.ToString(rowValues[6]);
-                        DataGridView1[7, i].Value = Convert.ToString(rowValues[7]);
-
-                        if (string.IsNullOrEmpty(rowValues[8]))
-                            DataGridView1[9, i].Value = false;
-                        else
-                            DataGridView1[9, i].Value = Convert.ToBoolean(rowValues[8]);
-
-                        DataGridView1[10, i].Value = Convert.ToString(rowValues[9]);
-                        DataGridView1[8, i].Value = Convert.ToString(rowValues[10]);
-                    } catch (Exception ex) {
-                        //MessageBox.Show("A row's column could not be loaded")
-                        MessageBox.Show(ex.Message);
-                        throw;
-                    }
-                }
             }
 
             IgnoreLossCheckBox.Checked = Properties.Settings.Default.IgnoreLoss;
 
             if (IsNumeric(Properties.Settings.Default.UpdateInterval)) {
                 UpdateIntervalNumericUpDown.Value = Properties.Settings.Default.UpdateInterval;
-            } else { // default value
+            } else {
                 UpdateIntervalNumericUpDown.Value = 1;
             }
 
@@ -115,13 +92,21 @@ namespace Bitcoin_Transaction_Log
                 }
             }
 
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.CryptoMain)) {
+                try {
+                    var settings = new JsonSerializerSettings {
+                        ContractResolver = new PrivateSetterContractResolver()
+                    };
+                    CryptoList = JsonConvert.DeserializeObject<CryptoMain>(Properties.Settings.Default.CryptoMain, settings);
+                } catch { }
+            }
+            CryptoList.LoadCrypto(this, CryptoList.CurrentCryptoType);
+
             ToolTip1.SetToolTip(PauseButton, pauseTooltip);
 
             UpdateRateTimer.Interval = Convert.ToInt32(UpdateIntervalNumericUpDown.Value) * 1000;
             UpdateRateTimer.Start();
             UpdateRateTimer_Tick(sender, e);
-
-            StartAlertsTimer();
 
             this.ActiveControl = Label1; // focus nothing
             Loading = false; // loading is finished flag
@@ -138,19 +123,8 @@ namespace Bitcoin_Transaction_Log
                     this.WindowState = FormWindowState.Normal;
                 }
 
-                // save all DataGridView rows
-                if (Properties.Settings.Default.DataGridSettings != null) {
-                    Properties.Settings.Default.DataGridSettings.Clear();
-                }
-                if (Properties.Settings.Default.DataGridSettings == null) {
-                    Properties.Settings.Default.DataGridSettings = new System.Collections.Specialized.StringCollection();
-                }
-                for (int i = 0; i <= DataGridView1.Rows.Count - 1; i++) {
-                    string newStr = DataGridView1[0, i].Value + "<**>" + DataGridView1[1, i].Value + "<**>" + DataGridView1[2, i].Value + "<**>" + DataGridView1[3, i].Value
-            + "<**>" + DataGridView1[4, i].Value + "<**>" + DataGridView1[5, i].Value + "<**>" + DataGridView1[6, i].Value + "<**>" + DataGridView1[7, i].Value
-            + "<**>" + Convert.ToString(DataGridView1[9, i].Value) + "<**>" + Convert.ToString(DataGridView1[10, i].Value) + "<**>" + Convert.ToString(DataGridView1[8, i].Value);
-                    Properties.Settings.Default.DataGridSettings.Add(newStr);
-                }
+                CryptoList.SaveCurrentCrypto(this);
+                Properties.Settings.Default.CryptoMain = JsonConvert.SerializeObject(CryptoList);
 
                 if (IsNumeric(SellAllNowProfitFeeTextBox.Text)) {
                     Properties.Settings.Default.SellAllNowProfitFee = Convert.ToDouble(SellAllNowProfitFeeTextBox.Text);
@@ -192,7 +166,7 @@ namespace Bitcoin_Transaction_Log
         /// <summary>
         /// Open a new NewBuySell form.
         /// </summary>
-        private void OpenNewNewBuySell(int index, string text)
+        private static void OpenNewNewBuySell(int index, string text)
         {
             NewBuySell newForm = new NewBuySell(mainForm);
             newBuySell.Add(newForm);
@@ -214,21 +188,40 @@ namespace Bitcoin_Transaction_Log
 
                 try {
                     if (!Timer1Paused) {
-                        WebRequest wrGETURL;
-                        wrGETURL = WebRequest.Create("https://api.coinbase.com/v2/exchange-rates?currency=BTC");
-                        wrGETURL.Timeout = 750;
-                        wrGETURL.Method = "GET";
+                        lock (LockPerformUpdates) {
+                            WebRequest wrGETURL;
+                            wrGETURL = WebRequest.Create("https://api.coinbase.com/v2/exchange-rates?currency=" + CryptoList.CurrentCryptoType);
+                            wrGETURL.Timeout = 750;
+                            wrGETURL.Method = "GET";
 
-                        Stream objStream;
-                        objStream = wrGETURL.GetResponse().GetResponseStream();
-                        StreamReader reader = new StreamReader(objStream);
-                        string responseFromServer = reader.ReadToEnd();
-                        objStream.Close();
+                            Stream objStream;
+                            objStream = wrGETURL.GetResponse().GetResponseStream();
+                            StreamReader reader = new StreamReader(objStream);
+                            string responseFromServer = reader.ReadToEnd();
+                            objStream.Close();
 
-                        JObject ser = JObject.Parse(responseFromServer);
-                        List<JToken> data = ser.Children().ToList();
+                            JObject ser = JObject.Parse(responseFromServer);
+                            List<JToken> data = ser.Children().ToList();
 
-                        if (PerformOnce1) {
+                            if (PerformOnce1) {
+                                foreach (JProperty item in data) {
+                                    item.CreateReader();
+                                    switch (item.Name) {
+                                        case "data":
+                                            foreach (JProperty data2 in item.Value) {
+                                                if (data2.Name == "rates") {
+                                                    foreach (JProperty data3 in data2.Value) {
+                                                        ComboBoxItemsAdd("CurrencyTypeComboBox", data3.Name); //CurrencyTypeComboBox.Items.Add(data3.Name)
+                                                    }
+                                                    break;
+                                                }
+                                            }
+                                            break;
+                                    }
+                                }
+                                PerformOnce1 = false;
+                            }
+
                             foreach (JProperty item in data) {
                                 item.CreateReader();
                                 switch (item.Name) {
@@ -236,33 +229,16 @@ namespace Bitcoin_Transaction_Log
                                         foreach (JProperty data2 in item.Value) {
                                             if (data2.Name == "rates") {
                                                 foreach (JProperty data3 in data2.Value) {
-                                                    ComboBoxItemsAdd("CurrencyTypeComboBox", data3.Name); //CurrencyTypeComboBox.Items.Add(data3.Name)
+                                                    if (data3.Name == CurrentMoneyType) {
+                                                        SetText("CurrPriceBTCTextBox", Convert.ToString(data3.Value)); // CurrPriceBTCTextBox.Text = data3.Value
+                                                        break;
+                                                    }
                                                 }
                                                 break;
                                             }
                                         }
                                         break;
                                 }
-                            }
-                            PerformOnce1 = false;
-                        }
-
-                        foreach (JProperty item in data) {
-                            item.CreateReader();
-                            switch (item.Name) {
-                                case "data":
-                                    foreach (JProperty data2 in item.Value) {
-                                        if (data2.Name == "rates") {
-                                            foreach (JProperty data3 in data2.Value) {
-                                                if (data3.Name == CurrentMoneyType) {
-                                                    SetText("CurrPriceBTCTextBox", Convert.ToString(data3.Value)); // CurrPriceBTCTextBox.Text = data3.Value
-                                                    break;
-                                                }
-                                            }
-                                            break;
-                                        }
-                                    }
-                                    break;
                             }
                         }
                     }
@@ -271,10 +247,10 @@ namespace Bitcoin_Transaction_Log
 
                 } catch /*(System.Net.WebException ex1)*/ {
                     //if (ex1.Status == 14) { // Timeout
-                    //MessageBox.Show("System.Net.WebException" + Environment.NewLine + ex1.Message);
+                    //Interaction.MsgBox("System.Net.WebException" + Environment.NewLine + ex1.Message);
                     //}
                     /*} catch (Exception ex) {
-                        //MessageBox.Show("System.Net.WebException" + Environment.NewLine + ex.Message);*/
+                        //Interaction.MsgBox("System.Net.WebException" + Environment.NewLine + ex.Message);*/
                 } finally {
                     try {
                         if (!UpdateBitcoinValue.CancellationPending) {
@@ -329,7 +305,7 @@ namespace Bitcoin_Transaction_Log
                 ComboBoxItemsAdd_Callback d = new ComboBoxItemsAdd_Callback(ComboBoxItemsAdd);
                 this.Invoke(d, new object[] { ComboBoxRef, text });
             } else {
-                if (text != tb.Text && text != "BTC") { // user money type is added on load
+                if (text != tb.Text) { // user money type is added on load
                     tb.Items.Add(text);
                 }
             }
@@ -340,102 +316,121 @@ namespace Bitcoin_Transaction_Log
         /// </summary>
         public void PerformUpdates()
         {
-            UpdateTotalBitcoins(); // update total bitcoins display
-            UpdateRowSpecificProfit(); // update each row's potential profit if sold at current Bitcoin price
+            UpdateRowSpecificFeeAmounts();
+            UpdateTotalBitcoins(); // update total crytpo display
+            UpdateRowSpecificProfit(); // update each row's potential profit if sold at current exchange price
             UpdateRowSpecificBreakEvenPoint(); // update each row's break-even Bitcoin price
-            UpdateSellNowRevenue(); // update total potential revenue display
 
-            decimal TotalBTC = 0m;
-            decimal BuyUSD = 0m;
-            decimal SellUSD = 0m;
-            bool success = false;
-            try {
-                ComputeTotalBTCandUSD(ref TotalBTC, ref BuyUSD, ref SellUSD);
-                success = true;
-            } catch {
-                SetText("SellAllNowProfitTextBox", "--");
-                SetText("SellAllBreakEvenTextBox", "--");
-            }
-            if (success) {
-                UpdateTotalPossibleProfit(ref TotalBTC, ref BuyUSD, ref SellUSD); // update total potential profit display
-                UpdateBreakEven(ref TotalBTC, ref BuyUSD, ref SellUSD); // update break-even price display
-            }
+            decimal totalBTC = 0m;
+            decimal buyUSD = 0m;
+            decimal sellUSD = 0m;
+            decimal feeAmt = 0m;
+            ComputetotalBTCandUSD(ref totalBTC, ref buyUSD, ref sellUSD, ref feeAmt);
+
+            UpdateSellNowRevenue(totalBTC); // update total potential revenue display
+            UpdateTotalPossibleProfit(totalBTC, buyUSD, sellUSD, feeAmt); // update total potential profit display
+            UpdateBreakEven(totalBTC); // update break-even display
+            UpdateProfitBreakEven(totalBTC, buyUSD, sellUSD, feeAmt); // update profit adjusted break-even display
+
             if (InTrayFlag) {
-                NotifyIcon1.Text = CurrPriceBTCTextBox.Text;
+                NotifyIcon1.Text = CurrPriceBTCTextBox.Text + " (" + CryptoList.CurrentCryptoType + ")";
             }
         }
 
         /// <summary>
-        /// Updates each BUY/GAIN transcation's row specific profit if sold at the current Bitcoin price.
+        /// Updates each BUY/GAIN transcation's row specific profit if sold at the current exchange price.
         /// </summary>
         public void UpdateRowSpecificProfit()
         {
             lock (LockUpdates) {
+                decimal SellFeeMult;
+                if (IsNumeric(SellAllNowProfitFeeTextBox.Text)) {
+                    SellFeeMult = (1m - (Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m));
+                } else SellFeeMult = 1m;
+
                 for (int i = 0; i <= DataGridView1.Rows.Count - 1; i++) {
                     string transactionType = Convert.ToString(DataGridView1[0, i].Value);
-                    if (IsNumeric(DataGridView1[5, i].Value) && IsNumeric(DataGridView1[2, i].Value) && IsNumeric(DataGridView1[3, i].Value) && IsNumeric(CurrPriceBTCTextBox.Text) &&
+                    decimal btc;
+                    decimal usd;
+                    decimal currentExchangeRate;
+                    if (decimal.TryParse(Convert.ToString(DataGridView1[2, i].Value), out btc) &&
+                        decimal.TryParse(Convert.ToString(DataGridView1[3, i].Value), out usd) &&
+                        decimal.TryParse(CurrPriceBTCTextBox.Text, out currentExchangeRate) &&
                         (transactionType == "BUY" || transactionType == "GAIN")) {
 
-                        if (Convert.ToDecimal(CurrPriceBTCTextBox.Text) == 0m) { // equals 0
-                            DataGridView1[6, i].Value = "-100 %"; // percent change
-                            DataGridView1[7, i].Value = -Convert.ToDecimal(DataGridView1[3, i].Value);  // profit
+                        if (currentExchangeRate == 0m) { // equals 0
+                            DataGridView1[7, i].Value = "-100 %"; // percent change
+                            DataGridView1[8, i].Value = -Convert.ToDecimal(DataGridView1[3, i].Value); // profit
                         } else {
-                            decimal Fee = 0m;
-                            if (IsNumeric(DataGridView1[4, i].Value)) {
-                                Fee = Convert.ToDecimal(DataGridView1[4, i].Value);
-                            }
-
-                            decimal BTC = Convert.ToDecimal(DataGridView1[2, i].Value);
-                            decimal USD = Convert.ToDecimal(DataGridView1[3, i].Value);
+                            decimal FeeAmount;
+                            if (!decimal.TryParse(Convert.ToString(DataGridView1[4, i].Value), out FeeAmount))
+                                FeeAmount = 0m;
 
                             try {
-                                decimal Gross = ((BTC * Convert.ToDecimal(CurrPriceBTCTextBox.Text)) * (1m - (Fee / 100m)));
-                                decimal Profit = Gross - USD;
+                                decimal cost = usd + FeeAmount;
+                                decimal sellNow;
+                                if (SellFeeMult != 0m)
+                                    sellNow = btc * (currentExchangeRate / SellFeeMult);
+                                else
+                                    sellNow = 0m;
 
                                 try {
-                                    decimal PercentChange = Profit / USD;
-                                    DataGridView1[6, i].Value = Math.Round(PercentChange * 100m, 4) + " %";
-                                } catch {
-                                    DataGridView1[6, i].Value = "--";
-                                }
-                                try {
-                                    DataGridView1[7, i].Value = Math.Round(Profit, 2);
+                                    if (cost != 0m) {
+                                        decimal PercentChange = (sellNow / cost) - 1m;
+                                        DataGridView1[7, i].Value = Math.Round(PercentChange * 100m, 2) + " %";
+                                    } else {
+                                        DataGridView1[7, i].Value = "--";
+                                    }
                                 } catch {
                                     DataGridView1[7, i].Value = "--";
                                 }
+                                try {
+                                    DataGridView1[8, i].Value = Math.Round(sellNow - cost, 2);
+                                } catch {
+                                    DataGridView1[8, i].Value = "--";
+                                }
                             } catch {
-                                DataGridView1[6, i].Value = "--";
                                 DataGridView1[7, i].Value = "--";
+                                DataGridView1[8, i].Value = "--";
                             }
                         }
                     } else {
-                        DataGridView1[6, i].Value = "--";
                         DataGridView1[7, i].Value = "--";
+                        DataGridView1[8, i].Value = "--";
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Updates each BUY transcation's row specific break-even point for selling. (Reliant on that row's fee)
+        /// Updates each BUY transcation's row specific break-even point for selling.
         /// </summary>
         private void UpdateRowSpecificBreakEvenPoint()
         {
             lock (LockUpdates) {
                 for (int i = 0; i <= DataGridView1.Rows.Count - 1; i++) {
                     string transactionType = Convert.ToString(DataGridView1[0, i].Value);
-                    if (transactionType == "BUY" && IsNumeric(DataGridView1[2, i].Value) && IsNumeric(DataGridView1[3, i].Value)) {
-                        decimal FeePercent = 0m;
-                        if (IsNumeric(DataGridView1[4, i].Value)) {
-                            FeePercent = Convert.ToDecimal(DataGridView1[4, i].Value);
-                        }
+                    if (transactionType == "BUY" && IsNumeric(DataGridView1[6, i].Value)) {
                         try {
-                            DataGridView1[8, i].Value = Math.Round((100m * Convert.ToDecimal(DataGridView1[3, i].Value)) / ((100m - FeePercent) * Convert.ToDecimal(DataGridView1[2, i].Value)), 4);
+                            decimal SellFee;
+                            if (IsNumeric(SellAllNowProfitFeeTextBox.Text)) {
+                                SellFee = 1m - (Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m);
+                            } else SellFee = 1m;
+                            decimal FeeRowMult;
+                            if (IsNumeric(DataGridView1[5, i].Value)) {
+                                FeeRowMult = 1m - (Convert.ToDecimal(DataGridView1[5, i].Value) / 100m);
+                            } else FeeRowMult = 1m;
+                            decimal exchangeRate = Convert.ToDecimal(DataGridView1[6, i].Value);
+
+                            if (FeeRowMult != 0m && SellFee != 0m)
+                                DataGridView1[9, i].Value = Math.Round((exchangeRate / FeeRowMult) / SellFee, 2);
+                            else
+                                DataGridView1[9, i].Value = 0m;
                         } catch {
-                            DataGridView1[8, i].Value = "--";
+                            DataGridView1[9, i].Value = "--";
                         }
                     } else {
-                        DataGridView1[8, i].Value = "--";
+                        DataGridView1[9, i].Value = "--";
                     }
                 }
             }
@@ -450,12 +445,12 @@ namespace Bitcoin_Transaction_Log
             decimal currPriceBTC = 0m;
             decimal fee = 0m;
             string SellAllNowProfitFee = "0";
-            decimal temp = 0m;
+            decimal usd = 0m;
             decimal result = 0m;
 
             try {
                 lock (LockUpdates) {
-                    ComputeTotalBTCandUSD(ref totalBTC);
+                    ComputetotalBTCandUSD(ref totalBTC);
 
                     if (totalBTC > 0) {
                         if (IsNumeric(SellAllNowProfitFeeTextBox.Text)) {
@@ -465,38 +460,38 @@ namespace Bitcoin_Transaction_Log
                         if (IsNumeric(CurrPriceBTCTextBox.Text)) {
                             currPriceBTC = Convert.ToDecimal(CurrPriceBTCTextBox.Text);
                         }
-                        temp = totalBTC * currPriceBTC;
-                        result = temp * fee;
+                        usd = totalBTC * currPriceBTC;
+                        result = usd * fee;
                     }
                 }
 
                 if (totalBTC > 0) {
-                    MessageBox.Show("(" + totalBTC + "BTC * $" + currPriceBTC + ") * " + fee + " = $" + result + Environment.NewLine + Environment.NewLine +
-                    "(Total BTC * Current BTC Price) * Fee Multiplier (" + SellAllNowProfitFee + "%) = Total Revenue");
+                    Interaction.MsgBox("(" + totalBTC + CryptoList.CurrentCryptoType + " * $" + currPriceBTC + ") * " + fee + " = $" + result + Environment.NewLine + Environment.NewLine +
+                    "(Total " + CryptoList.CurrentCryptoType + " * Current " + CryptoList.CurrentCryptoType + " Price) * Fee Multiplier (" + SellAllNowProfitFee + "%) = Total Revenue");
                 } else if (totalBTC < 0) {
-                    MessageBox.Show("Total Bitcoins is less than zero: " + totalBTC);
+                    Interaction.MsgBox("Total " + CryptoList.CurrentCryptoName + " is less than zero: " + totalBTC);
                 } else {
-                    MessageBox.Show("Total bitcoins = 0");
+                    Interaction.MsgBox("Total " + CryptoList.CurrentCryptoName + " = 0");
                 }
             } catch {
-                MessageBox.Show("Unable to calculate.");
+                Interaction.MsgBox("Unable to calculate.");
             }
         }
 
         /// <summary>
         /// Updates "sell all now revenue" TextBox.
         /// </summary>
-        public void UpdateSellNowRevenue()
+        public void UpdateSellNowRevenue(decimal totalBTC)
         {
             lock (LockUpdates) {
                 try {
-                    if (Convert.ToDecimal(TotalBitcoinsTextBox.Text) > 0m && IsNumeric(CurrPriceBTCTextBox.Text)) {
-                        decimal temp = Convert.ToDecimal(TotalBitcoinsTextBox.Text) * Convert.ToDecimal(CurrPriceBTCTextBox.Text);
-                        decimal Fee = 0m;
+                    if (totalBTC > 0m && IsNumeric(CurrPriceBTCTextBox.Text)) {
+                        decimal feeMultiplier;
                         if (IsNumeric(SellAllNowProfitFeeTextBox.Text)) {
-                            Fee = 1m - ((Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m));
-                        }
-                        SetText("SellAllNowRevenueTextBox", Convert.ToString(Math.Round(temp * Fee, 2)));
+                            feeMultiplier = 1m - ((Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m));
+                        } else feeMultiplier = 1m;
+
+                        SetText("SellAllNowRevenueTextBox", Convert.ToString(Math.Round((totalBTC * Convert.ToDecimal(CurrPriceBTCTextBox.Text)) * feeMultiplier, 2)));
                     } else {
                         SetText("SellAllNowRevenueTextBox", "0");
                     }
@@ -507,24 +502,113 @@ namespace Bitcoin_Transaction_Log
         }
 
         /// <summary>
-        /// Updates the sell all break-even TextBox.
+        /// Updates row specific fee amount.
         /// </summary>
-        public void UpdateBreakEven(ref decimal TotalBTC, ref decimal BuyUSD, ref decimal SellUSD)
+        public void UpdateRowSpecificFeeAmounts()
         {
             lock (LockUpdates) {
-                if (TotalBTC > 0m) {
+                for (int i = 0; i <= DataGridView1.Rows.Count - 1; i++) {
+                    decimal feePercent;
+                    if (IsNumeric(DataGridView1[5, i].Value)) {
+                        feePercent = (Convert.ToDecimal(DataGridView1[5, i].Value) / 100m);
+                    } else feePercent = 0m;
+
+                    if (IsNumeric(DataGridView1[3, i].Value)) {
+                        DataGridView1[4, i].Value = Convert.ToString(Convert.ToDecimal(DataGridView1[3, i].Value) * feePercent);
+                    } else {
+                        DataGridView1[4, i].Value = "--";
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the profit adjusted break-even point TextBox.
+        /// </summary>
+        public void UpdateProfitBreakEven(decimal totalBTC, decimal buyUSD, decimal sellUSD, decimal feeAmt)
+        {
+            lock (LockUpdates) {
+                try {
+                    decimal averageCost = ((buyUSD + feeAmt) - sellUSD) / (totalBTC);
+                    decimal feeMultiplier;
+                    if (IsNumeric(SellAllNowProfitFeeTextBox.Text)) {
+                        feeMultiplier = 1 - (Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m);
+                    } else feeMultiplier = 0m;
+
+                    if (feeMultiplier > 0m) {
+                        decimal result = averageCost / feeMultiplier;
+                        SetText("ProfitSellAllBreakEvenTextBox", Convert.ToString(Math.Round(result, 2)));
+                    } else
+                        SetText("ProfitSellAllBreakEvenTextBox", "None");
+                } catch {
+                    SetText("ProfitSellAllBreakEvenTextBox", "--");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the sell all break-even TextBox.
+        /// </summary>
+        public void UpdateBreakEven(decimal totalBTC)
+        {
+            lock (LockUpdates) {
+                if (totalBTC > 0m) {
                     try {
-                        decimal averageCost = 0m;
-                        averageCost = (BuyUSD - SellUSD) / (TotalBTC);
-                        decimal fee = 0m;
-                        if (IsNumeric(SellAllNowProfitFeeTextBox.Text)) {
-                            fee = 1 - (Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m);
+                        List<DataGridSettingsRow> mainList = CryptoMain.GetDataGridViewRows(DataGridView1);
+                        List<DataGridSettingsRow> buyList = new List<DataGridSettingsRow>();
+                        decimal buybtcTotal = 0m; // total buy btc
+                        for (int i = 0; i <= mainList.Count - 1; i++) {
+                            switch (Convert.ToString(mainList[i].Transaction)) {
+                                case "BUY":
+                                    if (!mainList[i].Disabled) {
+                                        buyList.Add(mainList[i]);
+                                        decimal value;
+                                        if (decimal.TryParse(mainList[i].BTC, out value)) {
+                                            buybtcTotal += value; // add to buy btc total
+                                        }
+                                    }
+                                    break;
+                            }
                         }
 
-                        if (fee > 0m)
-                            SetText("SellAllBreakEvenTextBox", Convert.ToString(Math.Round(averageCost / fee, 2)));
-                        else
-                            SetText("SellAllBreakEvenTextBox", "None");
+                        decimal total = 0m;
+                        bool buyFound = false;
+                        for (int i = 0; i < buyList.Count; i++) {
+                            switch (buyList[i].Transaction) {
+                                case "BUY":
+                                    decimal btc;
+                                    if (decimal.TryParse(buyList[i].BTC, out btc)) {
+                                        decimal feeMult;
+                                        if (decimal.TryParse(buyList[i].Fee, out feeMult)) {
+                                            feeMult = (1m - (feeMult / 100m));
+                                        }
+                                        decimal exchangeRate;
+                                        if (decimal.TryParse(buyList[i].ExchangeRate, out exchangeRate)) {
+                                            if (feeMult != 0m) {
+                                                total += (btc / buybtcTotal) * (exchangeRate / feeMult);
+                                                buyFound = true;
+                                            }
+                                        }
+                                    }
+                                    break;
+                            }
+                        }
+
+                        if (buyFound) {
+                            decimal feeMult;
+                            if (decimal.TryParse(SellAllNowProfitFeeTextBox.Text, out feeMult)) {
+                                feeMult = 1m - (feeMult / 100m);
+                                if (feeMult > 0m) {
+                                    decimal result = total / feeMult;
+                                    SetText("SellAllBreakEvenTextBox", Convert.ToString(Math.Round(result, 2)));
+                                } else
+                                    SetText("SellAllBreakEvenTextBox", "None");
+                            } else {
+                                SetText("SellAllBreakEvenTextBox", Convert.ToString(Math.Round(total, 2)));
+                            }
+                        } else {
+                            SetText("SellAllBreakEvenTextBox", "--");
+                        }
                     } catch {
                         SetText("SellAllBreakEvenTextBox", "--");
                     }
@@ -539,46 +623,48 @@ namespace Bitcoin_Transaction_Log
         /// </summary>
         private void BreakEvenPriceButton_Click(object sender, EventArgs e)
         {
-            decimal BuyUSD = 0m;
-            decimal SellUSD = 0m;
+            decimal buyUSD = 0m;
+            decimal sellUSD = 0m;
             decimal totalBTC = 0m;
+            decimal feeAmt = 0m;
             string feeText = "";
-            lock (LockUpdates) {
-                try {
-                    ComputeTotalBTCandUSD(ref totalBTC, ref BuyUSD, ref SellUSD);
+
+            try {
+                lock (LockUpdates) {
+                    ComputetotalBTCandUSD(ref totalBTC, ref buyUSD, ref sellUSD, ref feeAmt);
                     feeText = SellAllNowProfitFeeTextBox.Text;
-                } catch (Exception ex) {
-                    MessageBox.Show("Error: " + ex.GetType());
                 }
+            } catch (Exception ex) {
+                Interaction.MsgBox("Error: " + ex.GetType());
             }
 
             if (totalBTC > 0m) {
                 try {
-                    decimal averageCost = Math.Abs(SellUSD - BuyUSD) / (totalBTC);
-                    decimal fee = 0m;
+                    decimal averageCost = ((buyUSD + feeAmt) - sellUSD) / (totalBTC);
+                    decimal feeMultiplier;
                     if (IsNumeric(feeText)) {
-                        fee = 1 - (Convert.ToDecimal(feeText) / 100m);
-                    }
+                        feeMultiplier = 1 - (Convert.ToDecimal(feeText) / 100m);
+                    } else feeMultiplier = 0m;
 
-                    if (fee > 0m) {
-                        decimal result = averageCost / fee;
-                        MessageBox.Show("[(" + BuyUSD + " - " + SellUSD + ") / " + totalBTC + "] " + " / " + fee + " = " + result + Environment.NewLine + Environment.NewLine +
-                                        "[(Buy USD - Sell USD) / Total BTC] / Fee Multiplier = " + result);
+                    if (feeMultiplier > 0m) {
+                        decimal result = averageCost / feeMultiplier;
+                        Interaction.MsgBox("[( (" + buyUSD + " + " + feeAmt + ") - " + sellUSD + ") / " + totalBTC + "] " + " / " + feeMultiplier + " = " + result + Environment.NewLine + Environment.NewLine +
+                                        "[( (Buy " + CurrencyTypeComboBox.Text + " + Fees) - Sell " + CurrencyTypeComboBox.Text + ") / Total " + CryptoList.CurrentCryptoType + "] / Fee Multiplier = " + result);
                     } else {
-                        MessageBox.Show("None");
+                        Interaction.MsgBox("None");
                     }
                 } catch (Exception ex) {
-                    MessageBox.Show("Error: " + ex.GetType());
+                    Interaction.MsgBox("Error: " + ex.GetType());
                 }
             } else {
-                MessageBox.Show("Unable to calculate. Total bitcoins = 0");
+                Interaction.MsgBox("Unable to calculate. Total " + CryptoList.CurrentCryptoName + " <= 0");
             }
         }
 
         /// <summary>
         /// Update total sell now profit TextBox.
         /// </summary>
-        public void UpdateTotalPossibleProfit(ref decimal TotalBTC, ref decimal BuyUSD, ref decimal SellUSD)
+        public void UpdateTotalPossibleProfit(decimal totalBTC, decimal buyUSD, decimal sellUSD, decimal feeAmt)
         {
             lock (LockUpdates) {
                 if (DataGridView1.Rows.Count > 0) {
@@ -588,17 +674,21 @@ namespace Bitcoin_Transaction_Log
                             SetText("ProfitPercentTextBox", "0");
                         } else {
                             // add total profit columns together
-                            decimal Fee = 1m;
+                            decimal feeMultiplier;
                             if (IsNumeric(SellAllNowProfitFeeTextBox.Text)) {
-                                Fee = 1m - (Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m);
-                            }
-                            decimal part1 = ((TotalBTC * Convert.ToDecimal(CurrPriceBTCTextBox.Text)) * Fee);
+                                feeMultiplier = 1m - (Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m);
+                            } else
+                                feeMultiplier = 1m;
 
-                            SetText("SellAllNowProfitTextBox", Convert.ToString(Math.Round(part1 + (SellUSD - BuyUSD), 2)));
+                            //if (totalBTC <= 0m)
+                            //    totalBTC = 0m;
+                            decimal Revenue = ((totalBTC * Convert.ToDecimal(CurrPriceBTCTextBox.Text)) * feeMultiplier);
+
+                            SetText("SellAllNowProfitTextBox", Convert.ToString(Math.Round(Revenue + (sellUSD - (buyUSD + feeAmt)), 2)));
 
                             decimal resultPercent;
-                            if (BuyUSD != 0)
-                                resultPercent = Math.Round((((part1 + SellUSD) / BuyUSD) - 1m) * 100m, 2);
+                            if (buyUSD + feeAmt != 0m)
+                                resultPercent = Math.Round((((Revenue + sellUSD) / (buyUSD + feeAmt)) - 1m) * 100m, 2);
                             else
                                 resultPercent = 0m;
 
@@ -623,76 +713,93 @@ namespace Bitcoin_Transaction_Log
         /// </summary>
         private void SellAllProfitInfoButton_Click(object sender, EventArgs e)
         {
-            decimal TotalBTC = 0m;
-            decimal BuyUSD = 0m;
-            decimal SellUSD = 0m;
-            decimal CurrPriceBTC = 0m;
-            decimal Fee = 1m;
+            decimal totalBTC = 0m;
+            decimal buyUSD = 0m;
+            decimal sellUSD = 0m;
+            decimal feeAmt = 0m;
+            decimal CurrPriceBTC;
+            decimal FeeMultiplier;
+            decimal Revenue;
 
             if (DataGridView1.Rows.Count > 0) {
                 try {
                     lock (LockUpdates) {
-                        ComputeTotalBTCandUSD(ref TotalBTC, ref BuyUSD, ref SellUSD);
+                        ComputetotalBTCandUSD(ref totalBTC, ref buyUSD, ref sellUSD, ref feeAmt);
+
                         if (IsNumeric(CurrPriceBTCTextBox.Text)) {
                             CurrPriceBTC = Convert.ToDecimal(CurrPriceBTCTextBox.Text);
-                        }
+                        } else
+                            CurrPriceBTC = 0m;
+
                         if (IsNumeric(SellAllNowProfitFeeTextBox.Text)) {
-                            Fee = 1m - (Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m);
-                        }
+                            FeeMultiplier = 1m - (Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m);
+                        } else
+                            FeeMultiplier = 1m;
+
+                        Revenue = ((totalBTC * Convert.ToDecimal(CurrPriceBTCTextBox.Text)) * FeeMultiplier);
                     }
-                    decimal part1 = ((TotalBTC * Convert.ToDecimal(CurrPriceBTCTextBox.Text)) * Fee);
+
                     decimal resultPercent;
-                    if (BuyUSD != 0)
-                        resultPercent = Math.Round((((part1 + SellUSD) / BuyUSD) - 1m) * 100m, 2);
+                    if (buyUSD != 0)
+                        resultPercent = Math.Round((((Revenue + sellUSD) / (buyUSD + feeAmt)) - 1m) * 100m, 2);
                     else
                         resultPercent = 0m;
 
-                    MessageBox.Show("[ ( " + TotalBTC + " BTC * $" + CurrPriceBTC + " ) * " + Fee + " ] + ( $" + SellUSD + " - $" + BuyUSD + " ) = $" +
-                            Math.Round(((TotalBTC * CurrPriceBTC) * Fee) + (SellUSD - BuyUSD), 2) + Environment.NewLine +
-                            "[ ( Total BTC * Current BTC Price ) * Fee Multiplier ] + ( Sell USD - Buy USD ) = Total Profit" + Environment.NewLine + Environment.NewLine +
-                            "( [ ( [ ( " + TotalBTC + " BTC * $" + CurrPriceBTC + " ) * " + Fee + " ] + " + SellUSD + " ) / " + BuyUSD + " ] - 1 ) * 100 = " + resultPercent + Environment.NewLine +
-                            "( [ ( [ ( Total BTC * Current BTC Price ) * Fee Multiplier ] + Sell USD ) / Buy USD ] - 1 ) * 100 = Percentage Change");
+                    string cur = CurrencyTypeComboBox.Text;
+                    string type = CryptoList.CurrentCryptoType;
+                    Interaction.MsgBox("[ ( " + totalBTC + " " + type + " * $" + CurrPriceBTC + " ) * " + FeeMultiplier + " ] + ( $" + sellUSD + " - ($" + buyUSD + " + " + feeAmt + ") ) = $" +
+                            Math.Round(Revenue + (sellUSD - (buyUSD + feeAmt)), 2) + Environment.NewLine +
+                            "[ (Total " + type + " * Current " + type + " Price) * Fee Multiplier ] + ( Sell " + cur + " - (Buy " + cur + " + Fees) ) = Total Profit" + Environment.NewLine + Environment.NewLine +
+                            "( [ ( [ ( " + totalBTC + " " + type + " * $" + CurrPriceBTC + " ) * " + FeeMultiplier + " ] + " + sellUSD + " ) / (" + buyUSD + " + " + feeAmt + ") ] - 1 ) * 100 = " + resultPercent + Environment.NewLine +
+                            "( [ ( [ ( Total " + type + " * Current " + type + " Price ) * Fee Multiplier ] + Sell " + cur + " ) / (Buy " + cur + " + Fees) ] - 1 ) * 100 = Percentage Change");
                 } catch {
-                    MessageBox.Show("Unable to calculate.");
+                    Interaction.MsgBox("Unable to calculate.");
                 }
             } else {
-                MessageBox.Show("0");
+                Interaction.MsgBox("0");
             }
         }
 
-        private void ComputeTotalBTCandUSD(ref decimal TotalBTC)
+        /// <summary>
+        /// Computes the total bitcoins and total buy and sell money.
+        /// </summary>
+        private void ComputetotalBTCandUSD(ref decimal totalBTC)
         {
-            decimal BuyUSD = 0m;
-            decimal SellUSD = 0m;
-            ComputeTotalBTCandUSD(ref TotalBTC, ref BuyUSD, ref SellUSD);
+            decimal buyUSD = 0m;
+            decimal sellUSD = 0m;
+            decimal feeAmt = 0m;
+            ComputetotalBTCandUSD(ref totalBTC, ref buyUSD, ref sellUSD, ref feeAmt);
         }
         /// <summary>
         /// Computes the total bitcoins and total buy and sell money.
         /// </summary>
-        private void ComputeTotalBTCandUSD(ref decimal TotalBTC, ref decimal BuyUSD, ref decimal SellUSD)
+        private void ComputetotalBTCandUSD(ref decimal totalBTC, ref decimal buyUSD, ref decimal sellUSD, ref decimal feeAmt)
         {
             for (int i = 0; i <= DataGridView1.Rows.Count - 1; i++) {
-                if (!Convert.ToBoolean(DataGridView1[9, i].Value)) {
+                if (!Convert.ToBoolean(DataGridView1[10, i].Value)) {
 
                     string transactionType = Convert.ToString(DataGridView1[0, i].Value);
-                    decimal BTC = Convert.ToDecimal(SanitizeNumber(DataGridView1[2, i].Value));
-                    decimal USD = Convert.ToDecimal(SanitizeNumber(DataGridView1[3, i].Value));
+                    decimal btc = Convert.ToDecimal(SanitizeNumber(DataGridView1[2, i].Value));
+                    decimal usd = Convert.ToDecimal(SanitizeNumber(DataGridView1[3, i].Value));
+                    decimal feeVal = Convert.ToDecimal(SanitizeNumber(DataGridView1[4, i].Value));
                     if (transactionType == "BUY") {
-                        TotalBTC += BTC;
-                        BuyUSD += USD;
+                        totalBTC += btc;
+                        buyUSD += usd;
+                        feeAmt += feeVal;
                     } else if (transactionType == "SELL") {
-                        TotalBTC -= BTC;
-                        SellUSD += USD;
+                        totalBTC -= btc;
+                        sellUSD += usd;
+                        feeAmt += feeVal;
                     } else if (transactionType == "LOSS") {
-                        // loss of BTC and/or USD
+                        // loss of btc and/or usd
                         if (!IgnoreLossCheckBox.Checked)
-                            if (BTC >= 0m)
-                                TotalBTC -= BTC;
+                            if (btc >= 0m)
+                                totalBTC -= btc;
                             else
-                                TotalBTC += BTC;
+                                totalBTC += btc;
                     } else if (transactionType == "GAIN") {
-                        // gain of BTC and/or USD
-                        TotalBTC += BTC;
+                        // gain of btc and/or usd
+                        totalBTC += btc;
                     }
                 }
             }
@@ -704,39 +811,42 @@ namespace Bitcoin_Transaction_Log
         public void UpdateTotalBitcoins()
         {
             lock (LockUpdates) {
-                decimal TotalBTC = 0m;
+                decimal totalBTC = 0m;
                 for (int i = 0; i <= DataGridView1.Rows.Count - 1; i++) {
-                    if (!Convert.ToBoolean(DataGridView1[9, i].Value)) {
+                    if (!Convert.ToBoolean(DataGridView1[10, i].Value)) {
 
                         string transactionType = Convert.ToString(DataGridView1[0, i].Value);
                         decimal value = Convert.ToDecimal(SanitizeNumber(DataGridView1[2, i].Value));
                         if (transactionType == "BUY") {
-                            TotalBTC += value;
+                            totalBTC += value;
                         } else if (transactionType == "SELL") {
-                            TotalBTC -= value;
+                            totalBTC -= value;
                         } else if (transactionType == "LOSS") {
-                            // loss of BTC and/or USD
+                            // loss of btc and/or usd
                             if (!IgnoreLossCheckBox.Checked) {
-                                bool BTC_IsNullOrEmpty = string.IsNullOrEmpty(Convert.ToString(DataGridView1[2, i].Value));
-                                if (!BTC_IsNullOrEmpty) {
+                                bool btc_IsNullOrEmpty = string.IsNullOrEmpty(Convert.ToString(DataGridView1[2, i].Value));
+                                if (!btc_IsNullOrEmpty) {
                                     if (value >= 0m) {
-                                        TotalBTC -= value;
+                                        totalBTC -= value;
                                     } else {
-                                        TotalBTC += value;
+                                        totalBTC += value;
                                     }
                                 }
                             }
                         } else if (transactionType == "GAIN") {
-                            // gain of BTC and/or USD
-                            bool BTC_IsNullOrEmpty = string.IsNullOrEmpty(Convert.ToString(DataGridView1[2, i].Value));
-                            if (!BTC_IsNullOrEmpty) {
-                                TotalBTC += value;
+                            // gain of btc and/or usd
+                            bool btc_IsNullOrEmpty = string.IsNullOrEmpty(Convert.ToString(DataGridView1[2, i].Value));
+                            if (!btc_IsNullOrEmpty) {
+                                totalBTC += value;
                             }
                         }
                     }
                 }
 
-                SetText("TotalBitcoinsTextBox", Convert.ToString(TotalBTC));
+                //if (totalBTC <= 0m)
+                //    totalBTC = 0m;
+
+                SetText("TotalBitcoinsTextBox", Convert.ToString(totalBTC));
             }
         }
 
@@ -746,7 +856,7 @@ namespace Bitcoin_Transaction_Log
         private void UpdateRateTimer_Tick(object sender, EventArgs e)
         {
             UpdateRateTimer.Stop(); // timer is restarted when work is complete in thread
-            if (UpdateBitcoinValue.IsBusy != true) {
+            if (!UpdateBitcoinValue.IsBusy) {
                 UpdateBitcoinValue.RunWorkerAsync();
             }
         }
@@ -758,9 +868,12 @@ namespace Bitcoin_Transaction_Log
             }
         }
 
+        /// <summary>
+        /// Perform Cryptocurrency price updating work and other updates.
+        /// </summary>
         private void UpdateBitcoinValue_DoWork(object sender, DoWorkEventArgs e)
         {
-            UpdateBitcoinExchangeValue(); // perform Bitcoin price updating work and other updates
+            UpdateBitcoinExchangeValue();
         }
 
         string pauseTooltip = "Pause the updating of the exchange rates, price alerts, and other info.";
@@ -793,22 +906,13 @@ namespace Bitcoin_Transaction_Log
         }
 
         /// <summary>
-        /// Change the Currencies used in column labels. (USD is default)
+        /// Change the Currencies used in column labels. (usd is default)
         /// </summary>
         private void ChangeColumnLabelCurrency(string NewMoneyType, string OldMoneyType)
         {
             CurrentMoneyType = NewMoneyType;
-            DataGridView1.Columns[3].HeaderText = NewMoneyType;
-
-            string[] StrBuild = DataGridView1.Columns[6].HeaderText.Split(new[] { OldMoneyType }, StringSplitOptions.None);
-            string NewStr = "";
-            if (StrBuild.Length > 1) {
-                NewStr = NewMoneyType;
-                foreach (string element in StrBuild) {
-                    NewStr += element;
-                }
-            }
-            DataGridView1.Columns[6].HeaderText = NewStr;
+            DataGridView1.Columns[3].HeaderText = DataGridView1.Columns[3].HeaderText.Replace(OldMoneyType, NewMoneyType);
+            DataGridView1.Columns[7].HeaderText = DataGridView1.Columns[7].HeaderText.Replace(OldMoneyType, NewMoneyType);
 
             foreach (NewBuySell form in newBuySell) {
                 if (form != null && form.Visible) {
@@ -817,7 +921,10 @@ namespace Bitcoin_Transaction_Log
             }
         }
 
-        public string CurrentMoneyType = ""; // holds current value of CurrencyTypeComboBox.Text
+        /// <summary>
+        /// Holds current value of CurrencyTypeComboBox.Text
+        /// </summary>
+        public string CurrentMoneyType = "";
         /// <summary>
         /// Change the current currency in use for bitcoin price and display purposes.
         /// </summary>
@@ -854,16 +961,59 @@ namespace Bitcoin_Transaction_Log
             }
         }
 
+        /// <summary>
+        /// User is editting a DataGridView cell.
+        /// </summary>
         bool DataGridUserEdit = false;
         private void DataGridView1_MouseDown(object sender, MouseEventArgs e)
         {
             DataGridUserEdit = true;
+
+            if (e.Button == MouseButtons.Right) {
+                int col = DataGridView1.HitTest(e.Location.X, e.Location.Y).ColumnIndex;
+                int row = DataGridView1.HitTest(e.Location.X, e.Location.Y).RowIndex;
+                if (col >= 0 && row >= 0 && DataGridView1.Columns.Count - 1 >= col && DataGridView1.Rows.Count - 1 >= row) {
+                    DataGridView1.ClearSelection();
+                    DataGridView1[col, row].Selected = true;
+                }
+            }
         }
 
         private void DataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (!Loading && DataGridUserEdit) {
+            if (DataGridUserEdit && !Loading && e.RowIndex >= 0 && e.ColumnIndex >= 0) {
                 DataGridUserEdit = false;
+
+                lock (LockUpdates) {
+                    decimal btc;
+                    decimal usd;
+                    decimal exchangeRate;
+                    switch (e.ColumnIndex) {
+                        case 3: // usd
+                            if (decimal.TryParse(Convert.ToString(DataGridView1[2, e.RowIndex].Value), out btc) &&
+                                decimal.TryParse(Convert.ToString(DataGridView1[3, e.RowIndex].Value), out usd)) {
+                                DataGridView1[6, e.RowIndex].Value = (1m / btc) * usd;
+                            }
+                            break;
+                        case 2: // btc
+                        case 6: // Exchange Rate
+                            if (decimal.TryParse(Convert.ToString(DataGridView1[2, e.RowIndex].Value), out btc) &&
+                                decimal.TryParse(Convert.ToString(DataGridView1[6, e.RowIndex].Value), out exchangeRate)) {
+                                DataGridView1[3, e.RowIndex].Value = btc * exchangeRate;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                PerformUpdates();
+            }
+        }
+
+        private void DataGridView1_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            if (!Loading) {
                 PerformUpdates();
             }
         }
@@ -882,8 +1032,8 @@ namespace Bitcoin_Transaction_Log
 
         public void StartAlertsTimer()
         {
-            if (((Properties.Settings.Default.PriceAlertsG != null && Properties.Settings.Default.PriceAlertsG.Count > 0) ||
-                (Properties.Settings.Default.PriceAlertsL != null && Properties.Settings.Default.PriceAlertsL.Count > 0)) && (!Timer1Paused && Properties.Settings.Default.PriceAlertsEnabled)) {
+            var with = CryptoList.CryptoRows[CryptoList.CurrentCryptoType];
+            if ((with.PriceAlertsG.Count > 0 || with.PriceAlertsL.Count > 0) && (!Timer1Paused && with.PriceAlertsEnabled)) {
                 if (!mainForm.PriceAlertTimer.Enabled) {
                     mainForm.PriceAlertTimer.Start();
                 }
@@ -896,27 +1046,23 @@ namespace Bitcoin_Transaction_Log
 
         private void PriceAlertTimer_Tick(object sender, EventArgs e)
         {
-            if (((Properties.Settings.Default.PriceAlertsG != null && Properties.Settings.Default.PriceAlertsG.Count == 0) &&
-                (Properties.Settings.Default.PriceAlertsL != null && Properties.Settings.Default.PriceAlertsL.Count == 0)) || (Timer1Paused || !Properties.Settings.Default.PriceAlertsEnabled)) {
+            var with = CryptoList.CryptoRows[CryptoList.CurrentCryptoType];
+            if ((with.PriceAlertsG.Count == 0 && with.PriceAlertsL.Count == 0) || (Timer1Paused || !with.PriceAlertsEnabled)) {
                 PriceAlertTimer.Stop();
                 return;
             }
 
             decimal currPrice;
             if (decimal.TryParse(CurrPriceBTCTextBox.Text, out currPrice)) {
-                if (Properties.Settings.Default.PriceAlertsG != null)
-                    foreach (string str in Properties.Settings.Default.PriceAlertsG) {
-                        if (currPrice >= Convert.ToDecimal(str)) {
-                            SystemSounds.Asterisk.Play();
-                            return;
-                        }
+                if (with.PriceAlertsG.Count > 0)
+                    if (currPrice >= Convert.ToDecimal(with.PriceAlertsG[0])) {
+                        SystemSounds.Asterisk.Play();
+                        return;
                     }
-                if (Properties.Settings.Default.PriceAlertsL != null)
-                    foreach (string str in Properties.Settings.Default.PriceAlertsL) {
-                        if (currPrice <= Convert.ToDecimal(str)) {
-                            SystemSounds.Asterisk.Play();
-                            return;
-                        }
+                if (with.PriceAlertsL.Count > 0)
+                    if (currPrice <= Convert.ToDecimal(with.PriceAlertsL[0])) {
+                        SystemSounds.Asterisk.Play();
+                        return;
                     }
             }
         }
@@ -941,8 +1087,13 @@ namespace Bitcoin_Transaction_Log
         bool InTrayFlag = false;
         private void minimizeToTrayButton_Click(object sender, EventArgs e)
         {
-            NotifyIcon1.Icon = Properties.Resources.icon50;
-            NotifyIcon1.Text = CurrPriceBTCTextBox.Text;
+            if (mainForm.CryptoList.CurrentCryptoType == "ETH")
+                NotifyIcon1.Icon = Properties.Resources.Ethereum32icon;
+            else if (mainForm.CryptoList.CurrentCryptoType == "LTC")
+                NotifyIcon1.Icon = Properties.Resources.Litecoin32icon;
+            else
+                NotifyIcon1.Icon = Properties.Resources.Bitcoin50;
+            NotifyIcon1.Text = CurrPriceBTCTextBox.Text + " (" + CryptoList.CurrentCryptoType + ")";
             MinimizeButtonFlag = true;
             WindowState = FormWindowState.Minimized;
 
@@ -990,6 +1141,45 @@ namespace Bitcoin_Transaction_Log
                     trayMenu.Hide();
                 this.Show();
                 this.WindowState = FormWindowState.Normal;
+            }
+        }
+
+        private void copyCellToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (DataGridView1.SelectedCells.Count > 0) {
+                try {
+                    if (DataGridView1.SelectedCells[0].Value != null) {
+                        Clipboard.SetText(Convert.ToString(DataGridView1.SelectedCells[0].Value));
+                    } else {
+                        Clipboard.Clear();
+                    }
+                } catch {
+                }
+            }
+        }
+
+        private void CryptoTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!Loading) {
+                UpdateRateTimer.Stop();
+                CryptoTypeWaitTimer_Tick(sender, e);
+            }
+        }
+
+        private void CryptoTypeWaitTimer_Tick(object sender, EventArgs e)
+        {
+            cryptoTypeWaitTimer.Start();
+            if (!UpdateBitcoinValue.IsBusy) {
+                cryptoTypeWaitTimer.Stop();
+
+                lock (LockPerformUpdates) {
+                    string newCryptoType = CryptoTypeComboBox.Text;
+                    CryptoList.SaveCurrentCrypto(this);
+                    CryptoList.LoadCrypto(this, newCryptoType);
+                }
+
+                UpdateRateTimer_Tick(sender, e);
+                PerformUpdates();
             }
         }
     }

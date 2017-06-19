@@ -2,9 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Bitcoin_Transaction_Log.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="DataGridSettings" Type="System.Collections.Specialized.StringCollection" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="UpdateInterval" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
@@ -23,14 +20,8 @@
     <Setting Name="SellAllNowProfitFee" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.25</Value>
     </Setting>
-    <Setting Name="PriceAlertsG" Type="System.Collections.Specialized.StringCollection" Scope="User">
+    <Setting Name="CryptoMain" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="PriceAlertsL" Type="System.Collections.Specialized.StringCollection" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="PriceAlertsEnabled" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

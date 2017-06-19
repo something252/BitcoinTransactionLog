@@ -25,17 +25,6 @@ namespace Bitcoin_Transaction_Log.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.Specialized.StringCollection DataGridSettings {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["DataGridSettings"]));
-            }
-            set {
-                this["DataGridSettings"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int UpdateInterval {
             get {
@@ -108,35 +97,13 @@ namespace Bitcoin_Transaction_Log.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.Specialized.StringCollection PriceAlertsG {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CryptoMain {
             get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["PriceAlertsG"]));
+                return ((string)(this["CryptoMain"]));
             }
             set {
-                this["PriceAlertsG"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.Specialized.StringCollection PriceAlertsL {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["PriceAlertsL"]));
-            }
-            set {
-                this["PriceAlertsL"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool PriceAlertsEnabled {
-            get {
-                return ((bool)(this["PriceAlertsEnabled"]));
-            }
-            set {
-                this["PriceAlertsEnabled"] = value;
+                this["CryptoMain"] = value;
             }
         }
     }

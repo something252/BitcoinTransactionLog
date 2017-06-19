@@ -29,20 +29,22 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Panel1 = new System.Windows.Forms.Panel();
-            this.ProfitPercentTextBox = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.ProfitSellAllBreakEvenTextBox = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
             this.CurrPriceBTCTextBox = new System.Windows.Forms.TextBox();
+            this.CryptoTypeComboBox = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.ProfitPercentTextBox = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
-            this.Label5 = new System.Windows.Forms.Label();
-            this.FeeAfterCheckBox = new System.Windows.Forms.CheckBox();
-            this.FeeBeforeCheckBox = new System.Windows.Forms.CheckBox();
             this.BreakEvenPriceButton = new System.Windows.Forms.PictureBox();
             this.SellAllBreakEvenTextBox = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.minimizeToTrayButton = new System.Windows.Forms.Button();
             this.alertsButton = new System.Windows.Forms.Button();
-            this.Label12 = new System.Windows.Forms.Label();
             this.SellAllNowProfitFeeTextBox = new System.Windows.Forms.TextBox();
             this.CurrencyTypeComboBox = new System.Windows.Forms.ComboBox();
             this.Label11 = new System.Windows.Forms.Label();
@@ -52,9 +54,8 @@
             this.Label10 = new System.Windows.Forms.Label();
             this.SellAllNowRevenueTextBox = new System.Windows.Forms.TextBox();
             this.Label9 = new System.Windows.Forms.Label();
-            this.BitcoinPictureBox2 = new System.Windows.Forms.PictureBox();
-            this.BitcoinPictureBox1 = new System.Windows.Forms.PictureBox();
-            this.Label7 = new System.Windows.Forms.Label();
+            this.CryptoPictureBox2 = new System.Windows.Forms.PictureBox();
+            this.CryptoPictureBox1 = new System.Windows.Forms.PictureBox();
             this.TotalBitcoinsTextBox = new System.Windows.Forms.TextBox();
             this.Label8 = new System.Windows.Forms.Label();
             this.SellAllNowProfitTextBox = new System.Windows.Forms.TextBox();
@@ -69,48 +70,55 @@
             this.NewSellButton = new System.Windows.Forms.Button();
             this.Label1 = new System.Windows.Forms.Label();
             this.AboutButton = new System.Windows.Forms.Button();
+            this.Label7 = new System.Windows.Forms.Label();
             this.DataGridView1 = new System.Windows.Forms.DataGridView();
             this.BuySellColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.DateTimeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BTCColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.USDColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FeeAmountColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FeeChargedColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BTCExchangeRateColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ExchangeRateColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PercentIncreaseColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SellNowProfitColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BreakEvenPointColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DisabledColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.CommentsColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyCellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UpdateRateTimer = new System.Windows.Forms.Timer(this.components);
             this.ToolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.UpdateBitcoinValue = new System.ComponentModel.BackgroundWorker();
             this.PriceAlertTimer = new System.Windows.Forms.Timer(this.components);
             this.NotifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.cryptoTypeWaitTimer = new System.Windows.Forms.Timer(this.components);
             this.Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BreakEvenPriceButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdateLight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SellAllProfitInfoButton)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.BitcoinPictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.BitcoinPictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CryptoPictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CryptoPictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SellAllBTCButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdateIntervalNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // Panel1
             // 
-            this.Panel1.Controls.Add(this.ProfitPercentTextBox);
+            this.Panel1.Controls.Add(this.label12);
+            this.Panel1.Controls.Add(this.ProfitSellAllBreakEvenTextBox);
+            this.Panel1.Controls.Add(this.label15);
             this.Panel1.Controls.Add(this.CurrPriceBTCTextBox);
+            this.Panel1.Controls.Add(this.CryptoTypeComboBox);
+            this.Panel1.Controls.Add(this.label5);
+            this.Panel1.Controls.Add(this.ProfitPercentTextBox);
             this.Panel1.Controls.Add(this.label14);
-            this.Panel1.Controls.Add(this.Label5);
-            this.Panel1.Controls.Add(this.FeeAfterCheckBox);
-            this.Panel1.Controls.Add(this.FeeBeforeCheckBox);
             this.Panel1.Controls.Add(this.BreakEvenPriceButton);
             this.Panel1.Controls.Add(this.SellAllBreakEvenTextBox);
             this.Panel1.Controls.Add(this.label13);
             this.Panel1.Controls.Add(this.minimizeToTrayButton);
             this.Panel1.Controls.Add(this.alertsButton);
-            this.Panel1.Controls.Add(this.Label12);
             this.Panel1.Controls.Add(this.SellAllNowProfitFeeTextBox);
             this.Panel1.Controls.Add(this.CurrencyTypeComboBox);
             this.Panel1.Controls.Add(this.Label11);
@@ -120,9 +128,8 @@
             this.Panel1.Controls.Add(this.Label10);
             this.Panel1.Controls.Add(this.SellAllNowRevenueTextBox);
             this.Panel1.Controls.Add(this.Label9);
-            this.Panel1.Controls.Add(this.BitcoinPictureBox2);
-            this.Panel1.Controls.Add(this.BitcoinPictureBox1);
-            this.Panel1.Controls.Add(this.Label7);
+            this.Panel1.Controls.Add(this.CryptoPictureBox2);
+            this.Panel1.Controls.Add(this.CryptoPictureBox1);
             this.Panel1.Controls.Add(this.TotalBitcoinsTextBox);
             this.Panel1.Controls.Add(this.Label8);
             this.Panel1.Controls.Add(this.SellAllNowProfitTextBox);
@@ -137,6 +144,7 @@
             this.Panel1.Controls.Add(this.NewSellButton);
             this.Panel1.Controls.Add(this.Label1);
             this.Panel1.Controls.Add(this.AboutButton);
+            this.Panel1.Controls.Add(this.Label7);
             this.Panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.Panel1.Location = new System.Drawing.Point(0, 0);
             this.Panel1.MaximumSize = new System.Drawing.Size(0, 100);
@@ -144,15 +152,36 @@
             this.Panel1.Size = new System.Drawing.Size(1361, 100);
             this.Panel1.TabIndex = 10;
             // 
-            // ProfitPercentTextBox
+            // label12
             // 
-            this.ProfitPercentTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ProfitPercentTextBox.Location = new System.Drawing.Point(1131, 76);
-            this.ProfitPercentTextBox.Name = "ProfitPercentTextBox";
-            this.ProfitPercentTextBox.ReadOnly = true;
-            this.ProfitPercentTextBox.Size = new System.Drawing.Size(191, 24);
-            this.ProfitPercentTextBox.TabIndex = 61;
-            this.ProfitPercentTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(355, -1);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(124, 18);
+            this.label12.TabIndex = 66;
+            this.label12.Text = "Profit Break-Even";
+            this.ToolTip1.SetToolTip(this.label12, "Sell all now profit adjusted break-even price");
+            // 
+            // ProfitSellAllBreakEvenTextBox
+            // 
+            this.ProfitSellAllBreakEvenTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ProfitSellAllBreakEvenTextBox.Location = new System.Drawing.Point(359, 20);
+            this.ProfitSellAllBreakEvenTextBox.Name = "ProfitSellAllBreakEvenTextBox";
+            this.ProfitSellAllBreakEvenTextBox.ReadOnly = true;
+            this.ProfitSellAllBreakEvenTextBox.Size = new System.Drawing.Size(114, 26);
+            this.ProfitSellAllBreakEvenTextBox.TabIndex = 65;
+            this.ProfitSellAllBreakEvenTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(346, 23);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(16, 18);
+            this.label15.TabIndex = 67;
+            this.label15.Text = "$";
             // 
             // CurrPriceBTCTextBox
             // 
@@ -166,60 +195,57 @@
             this.CurrPriceBTCTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.CurrPriceBTCTextBox.TextChanged += new System.EventHandler(this.CurrPriceBTCTextBox_TextChanged);
             // 
+            // CryptoTypeComboBox
+            // 
+            this.CryptoTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CryptoTypeComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CryptoTypeComboBox.FormattingEnabled = true;
+            this.CryptoTypeComboBox.Items.AddRange(new object[] {
+            "BTC",
+            "ETH",
+            "LTC"});
+            this.CryptoTypeComboBox.Location = new System.Drawing.Point(725, 6);
+            this.CryptoTypeComboBox.MaxDropDownItems = 100;
+            this.CryptoTypeComboBox.Name = "CryptoTypeComboBox";
+            this.CryptoTypeComboBox.Size = new System.Drawing.Size(67, 33);
+            this.CryptoTypeComboBox.TabIndex = 63;
+            this.CryptoTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.CryptoTypeComboBox_SelectedIndexChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(789, 10);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(61, 25);
+            this.label5.TabIndex = 64;
+            this.label5.Text = "Price";
+            // 
+            // ProfitPercentTextBox
+            // 
+            this.ProfitPercentTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ProfitPercentTextBox.Location = new System.Drawing.Point(1131, 76);
+            this.ProfitPercentTextBox.Name = "ProfitPercentTextBox";
+            this.ProfitPercentTextBox.ReadOnly = true;
+            this.ProfitPercentTextBox.Size = new System.Drawing.Size(191, 24);
+            this.ProfitPercentTextBox.TabIndex = 61;
+            this.ProfitPercentTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // label14
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(356, 42);
+            this.label14.Location = new System.Drawing.Point(356, 47);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(123, 18);
             this.label14.TabIndex = 52;
             this.label14.Text = "Break-Even Price";
             this.ToolTip1.SetToolTip(this.label14, "Sell all now break-even price");
             // 
-            // Label5
-            // 
-            this.Label5.AutoSize = true;
-            this.Label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label5.Location = new System.Drawing.Point(383, 0);
-            this.Label5.Name = "Label5";
-            this.Label5.Size = new System.Drawing.Size(119, 18);
-            this.Label5.TabIndex = 59;
-            this.Label5.Text = "Fee Functionality";
-            this.Label5.Visible = false;
-            // 
-            // FeeAfterCheckBox
-            // 
-            this.FeeAfterCheckBox.AutoSize = true;
-            this.FeeAfterCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.FeeAfterCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FeeAfterCheckBox.Location = new System.Drawing.Point(390, 44);
-            this.FeeAfterCheckBox.Name = "FeeAfterCheckBox";
-            this.FeeAfterCheckBox.Size = new System.Drawing.Size(112, 14);
-            this.FeeAfterCheckBox.TabIndex = 60;
-            this.FeeAfterCheckBox.Text = "Fee Taken After Buy USD";
-            this.FeeAfterCheckBox.UseVisualStyleBackColor = true;
-            this.FeeAfterCheckBox.Visible = false;
-            // 
-            // FeeBeforeCheckBox
-            // 
-            this.FeeBeforeCheckBox.AutoSize = true;
-            this.FeeBeforeCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.FeeBeforeCheckBox.Checked = true;
-            this.FeeBeforeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.FeeBeforeCheckBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FeeBeforeCheckBox.Location = new System.Drawing.Point(385, 25);
-            this.FeeBeforeCheckBox.Name = "FeeBeforeCheckBox";
-            this.FeeBeforeCheckBox.Size = new System.Drawing.Size(117, 14);
-            this.FeeBeforeCheckBox.TabIndex = 58;
-            this.FeeBeforeCheckBox.Text = "Fee Factored Into Buy USD";
-            this.FeeBeforeCheckBox.UseVisualStyleBackColor = true;
-            this.FeeBeforeCheckBox.Visible = false;
-            // 
             // BreakEvenPriceButton
             // 
             this.BreakEvenPriceButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.BreakEvenPriceButton.Location = new System.Drawing.Point(474, 63);
+            this.BreakEvenPriceButton.Location = new System.Drawing.Point(474, 20);
             this.BreakEvenPriceButton.Name = "BreakEvenPriceButton";
             this.BreakEvenPriceButton.Size = new System.Drawing.Size(30, 26);
             this.BreakEvenPriceButton.TabIndex = 57;
@@ -230,7 +256,7 @@
             // SellAllBreakEvenTextBox
             // 
             this.SellAllBreakEvenTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SellAllBreakEvenTextBox.Location = new System.Drawing.Point(360, 63);
+            this.SellAllBreakEvenTextBox.Location = new System.Drawing.Point(360, 68);
             this.SellAllBreakEvenTextBox.Name = "SellAllBreakEvenTextBox";
             this.SellAllBreakEvenTextBox.ReadOnly = true;
             this.SellAllBreakEvenTextBox.Size = new System.Drawing.Size(114, 26);
@@ -241,7 +267,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(347, 66);
+            this.label13.Location = new System.Drawing.Point(347, 71);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(16, 18);
             this.label13.TabIndex = 53;
@@ -268,16 +294,6 @@
             this.ToolTip1.SetToolTip(this.alertsButton, "Add or remove price alerts");
             this.alertsButton.UseVisualStyleBackColor = true;
             this.alertsButton.Click += new System.EventHandler(this.alertsButton_Click);
-            // 
-            // Label12
-            // 
-            this.Label12.AutoSize = true;
-            this.Label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label12.Location = new System.Drawing.Point(241, 5);
-            this.Label12.Name = "Label12";
-            this.Label12.Size = new System.Drawing.Size(111, 24);
-            this.Label12.TabIndex = 48;
-            this.Label12.Text = "(Fees are currently priced \r\ninto buys and sells)";
             // 
             // SellAllNowProfitFeeTextBox
             // 
@@ -368,35 +384,25 @@
             this.Label9.TabIndex = 33;
             this.Label9.Text = "$";
             // 
-            // BitcoinPictureBox2
+            // CryptoPictureBox2
             // 
-            this.BitcoinPictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.BitcoinPictureBox2.Location = new System.Drawing.Point(187, 37);
-            this.BitcoinPictureBox2.Name = "BitcoinPictureBox2";
-            this.BitcoinPictureBox2.Size = new System.Drawing.Size(26, 26);
-            this.BitcoinPictureBox2.TabIndex = 32;
-            this.BitcoinPictureBox2.TabStop = false;
-            this.ToolTip1.SetToolTip(this.BitcoinPictureBox2, "Bitcoins (BTC)");
+            this.CryptoPictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.CryptoPictureBox2.Location = new System.Drawing.Point(187, 37);
+            this.CryptoPictureBox2.Name = "CryptoPictureBox2";
+            this.CryptoPictureBox2.Size = new System.Drawing.Size(26, 26);
+            this.CryptoPictureBox2.TabIndex = 32;
+            this.CryptoPictureBox2.TabStop = false;
+            this.ToolTip1.SetToolTip(this.CryptoPictureBox2, "Bitcoins (BTC)");
             // 
-            // BitcoinPictureBox1
+            // CryptoPictureBox1
             // 
-            this.BitcoinPictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.BitcoinPictureBox1.Location = new System.Drawing.Point(311, 37);
-            this.BitcoinPictureBox1.Name = "BitcoinPictureBox1";
-            this.BitcoinPictureBox1.Size = new System.Drawing.Size(26, 26);
-            this.BitcoinPictureBox1.TabIndex = 31;
-            this.BitcoinPictureBox1.TabStop = false;
-            this.ToolTip1.SetToolTip(this.BitcoinPictureBox1, "Bitcoins (BTC)");
-            // 
-            // Label7
-            // 
-            this.Label7.AutoSize = true;
-            this.Label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label7.Location = new System.Drawing.Point(214, 42);
-            this.Label7.Name = "Label7";
-            this.Label7.Size = new System.Drawing.Size(98, 18);
-            this.Label7.TabIndex = 25;
-            this.Label7.Text = "Total Bitcoins";
+            this.CryptoPictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.CryptoPictureBox1.Location = new System.Drawing.Point(311, 37);
+            this.CryptoPictureBox1.Name = "CryptoPictureBox1";
+            this.CryptoPictureBox1.Size = new System.Drawing.Size(26, 26);
+            this.CryptoPictureBox1.TabIndex = 31;
+            this.CryptoPictureBox1.TabStop = false;
+            this.ToolTip1.SetToolTip(this.CryptoPictureBox1, "Bitcoins (BTC)");
             // 
             // TotalBitcoinsTextBox
             // 
@@ -512,7 +518,7 @@
             // 
             // PauseButton
             // 
-            this.PauseButton.Image = global::Bitcoin_Transaction_Log.Properties.Resources.Pause;
+            this.PauseButton.Image = ((System.Drawing.Image)(resources.GetObject("PauseButton.Image")));
             this.PauseButton.Location = new System.Drawing.Point(788, 59);
             this.PauseButton.Name = "PauseButton";
             this.PauseButton.Size = new System.Drawing.Size(30, 30);
@@ -549,12 +555,12 @@
             // Label1
             // 
             this.Label1.AutoSize = true;
-            this.Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Label1.Location = new System.Drawing.Point(538, 10);
+            this.Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label1.Location = new System.Drawing.Point(551, 10);
             this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(318, 29);
+            this.Label1.Size = new System.Drawing.Size(180, 25);
             this.Label1.TabIndex = 11;
-            this.Label1.Text = "Current Coinbase BTC Price";
+            this.Label1.Text = "Current Coinbase";
             // 
             // AboutButton
             // 
@@ -565,6 +571,16 @@
             this.AboutButton.Text = "About";
             this.AboutButton.UseVisualStyleBackColor = true;
             this.AboutButton.Click += new System.EventHandler(this.AboutButton_Click);
+            // 
+            // Label7
+            // 
+            this.Label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Label7.Location = new System.Drawing.Point(187, 37);
+            this.Label7.Name = "Label7";
+            this.Label7.Size = new System.Drawing.Size(151, 27);
+            this.Label7.TabIndex = 25;
+            this.Label7.Text = "Total Bitcoins";
+            this.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // DataGridView1
             // 
@@ -584,20 +600,23 @@
             this.DateTimeColumn,
             this.BTCColumn,
             this.USDColumn,
+            this.FeeAmountColumn,
             this.FeeChargedColumn,
-            this.BTCExchangeRateColumn,
+            this.ExchangeRateColumn,
             this.PercentIncreaseColumn,
             this.SellNowProfitColumn1,
             this.BreakEvenPointColumn,
             this.DisabledColumn,
             this.CommentsColumn});
+            this.DataGridView1.ContextMenuStrip = this.contextMenuStrip1;
             this.DataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DataGridView1.Location = new System.Drawing.Point(0, 100);
             this.DataGridView1.Name = "DataGridView1";
             this.DataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.DataGridView1.Size = new System.Drawing.Size(1361, 783);
+            this.DataGridView1.Size = new System.Drawing.Size(1361, 648);
             this.DataGridView1.TabIndex = 11;
             this.DataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellValueChanged);
+            this.DataGridView1.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.DataGridView1_UserDeletedRow);
             this.DataGridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DataGridView1_MouseDown);
             // 
             // BuySellColumn
@@ -619,6 +638,7 @@
             this.DateTimeColumn.FillWeight = 125F;
             this.DateTimeColumn.HeaderText = "Date";
             this.DateTimeColumn.Name = "DateTimeColumn";
+            this.DateTimeColumn.ReadOnly = true;
             this.DateTimeColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.DateTimeColumn.ToolTipText = "Time of transaction (optional)";
             // 
@@ -628,31 +648,39 @@
             this.BTCColumn.MaxInputLength = 20;
             this.BTCColumn.Name = "BTCColumn";
             this.BTCColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.BTCColumn.ToolTipText = "Bitcoins spent or gained";
+            this.BTCColumn.ToolTipText = "Bitcoins bought or sold";
             // 
             // USDColumn
             // 
-            this.USDColumn.HeaderText = "USD";
+            this.USDColumn.HeaderText = "USD (Before Fees)";
             this.USDColumn.MaxInputLength = 20;
             this.USDColumn.Name = "USDColumn";
             this.USDColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.USDColumn.ToolTipText = "Dollars spent or gained";
             // 
+            // FeeAmountColumn
+            // 
+            this.FeeAmountColumn.HeaderText = "Fee $";
+            this.FeeAmountColumn.MaxInputLength = 20;
+            this.FeeAmountColumn.Name = "FeeAmountColumn";
+            this.FeeAmountColumn.ReadOnly = true;
+            this.FeeAmountColumn.ToolTipText = "The fee paid";
+            // 
             // FeeChargedColumn
             // 
-            this.FeeChargedColumn.HeaderText = "Fee % (Buy+Sell)";
+            this.FeeChargedColumn.HeaderText = "Fee %";
             this.FeeChargedColumn.MaxInputLength = 20;
             this.FeeChargedColumn.Name = "FeeChargedColumn";
             this.FeeChargedColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.FeeChargedColumn.ToolTipText = "The fee incurred (percentage on buys and sells)";
+            this.FeeChargedColumn.ToolTipText = "The fee percentage";
             // 
-            // BTCExchangeRateColumn
+            // ExchangeRateColumn
             // 
-            this.BTCExchangeRateColumn.HeaderText = "BTC Exchange Rate";
-            this.BTCExchangeRateColumn.MaxInputLength = 20;
-            this.BTCExchangeRateColumn.Name = "BTCExchangeRateColumn";
-            this.BTCExchangeRateColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.BTCExchangeRateColumn.ToolTipText = "The BTC exchange rate at the time of buy/sell etc.";
+            this.ExchangeRateColumn.HeaderText = "BTC Exchange Rate";
+            this.ExchangeRateColumn.MaxInputLength = 20;
+            this.ExchangeRateColumn.Name = "ExchangeRateColumn";
+            this.ExchangeRateColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.ExchangeRateColumn.ToolTipText = "The BTC exchange rate at the time of buy/sell etc.";
             // 
             // PercentIncreaseColumn
             // 
@@ -670,16 +698,16 @@
             this.SellNowProfitColumn1.Name = "SellNowProfitColumn1";
             this.SellNowProfitColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.SellNowProfitColumn1.ToolTipText = "Sell this rows bitcoin\'s at the current exchange rate minus the price it was boug" +
-    "ht at.";
+    "ht at plus fees.";
             // 
             // BreakEvenPointColumn
             // 
-            this.BreakEvenPointColumn.FillWeight = 75F;
+            this.BreakEvenPointColumn.FillWeight = 71F;
             this.BreakEvenPointColumn.HeaderText = "Break-Even Point";
             this.BreakEvenPointColumn.MaxInputLength = 20;
             this.BreakEvenPointColumn.Name = "BreakEvenPointColumn";
             this.BreakEvenPointColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.BreakEvenPointColumn.ToolTipText = "Price at which you can sell and lose no money, even after any defined fees.";
+            this.BreakEvenPointColumn.ToolTipText = "Price at which you can sell and lose no money, even after any specified fees.";
             // 
             // DisabledColumn
             // 
@@ -695,6 +723,20 @@
             this.CommentsColumn.Name = "CommentsColumn";
             this.CommentsColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.CommentsColumn.ToolTipText = "Optional area to describe this transaction.";
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyCellToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(126, 26);
+            // 
+            // copyCellToolStripMenuItem
+            // 
+            this.copyCellToolStripMenuItem.Name = "copyCellToolStripMenuItem";
+            this.copyCellToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+            this.copyCellToolStripMenuItem.Text = "Copy Cell";
+            this.copyCellToolStripMenuItem.Click += new System.EventHandler(this.copyCellToolStripMenuItem_Click);
             // 
             // UpdateRateTimer
             // 
@@ -723,11 +765,15 @@
             this.NotifyIcon1.Text = "Bitcoin Transaction Logs";
             this.NotifyIcon1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.NotifyIcon1_MouseClick);
             // 
+            // cryptoTypeWaitTimer
+            // 
+            this.cryptoTypeWaitTimer.Tick += new System.EventHandler(this.CryptoTypeWaitTimer_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1361, 883);
+            this.ClientSize = new System.Drawing.Size(1361, 748);
             this.Controls.Add(this.DataGridView1);
             this.Controls.Add(this.Panel1);
             this.MinimumSize = new System.Drawing.Size(1369, 215);
@@ -742,11 +788,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.BreakEvenPriceButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdateLight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SellAllProfitInfoButton)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.BitcoinPictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.BitcoinPictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CryptoPictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CryptoPictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SellAllBTCButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdateIntervalNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -754,7 +801,6 @@
         #endregion
 
         internal System.Windows.Forms.Panel Panel1;
-        internal System.Windows.Forms.Label Label12;
         internal System.Windows.Forms.TextBox SellAllNowProfitFeeTextBox;
         internal System.Windows.Forms.Label Label11;
         internal System.Windows.Forms.PictureBox UpdateLight;
@@ -763,8 +809,8 @@
         internal System.Windows.Forms.Label Label10;
         internal System.Windows.Forms.TextBox SellAllNowRevenueTextBox;
         internal System.Windows.Forms.Label Label9;
-        internal System.Windows.Forms.PictureBox BitcoinPictureBox2;
-        internal System.Windows.Forms.PictureBox BitcoinPictureBox1;
+        internal System.Windows.Forms.PictureBox CryptoPictureBox2;
+        internal System.Windows.Forms.PictureBox CryptoPictureBox1;
         internal System.Windows.Forms.Label Label7;
         internal System.Windows.Forms.TextBox TotalBitcoinsTextBox;
         internal System.Windows.Forms.Label Label8;
@@ -794,20 +840,26 @@
         internal System.Windows.Forms.Label label13;
         internal System.Windows.Forms.Label label14;
         internal System.Windows.Forms.PictureBox BreakEvenPriceButton;
-        internal System.Windows.Forms.Label Label5;
-        internal System.Windows.Forms.CheckBox FeeAfterCheckBox;
-        internal System.Windows.Forms.CheckBox FeeBeforeCheckBox;
+        internal System.Windows.Forms.TextBox ProfitPercentTextBox;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem copyCellToolStripMenuItem;
+        internal System.Windows.Forms.ComboBox CryptoTypeComboBox;
+        internal System.Windows.Forms.Label label5;
+        internal System.Windows.Forms.Label label12;
+        internal System.Windows.Forms.TextBox ProfitSellAllBreakEvenTextBox;
+        internal System.Windows.Forms.Label label15;
         private System.Windows.Forms.DataGridViewComboBoxColumn BuySellColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateTimeColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn BTCColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn USDColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FeeAmountColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn FeeChargedColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BTCExchangeRateColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ExchangeRateColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn PercentIncreaseColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn SellNowProfitColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn BreakEvenPointColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn DisabledColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn CommentsColumn;
-        internal System.Windows.Forms.TextBox ProfitPercentTextBox;
+        private System.Windows.Forms.Timer cryptoTypeWaitTimer;
     }
 }
