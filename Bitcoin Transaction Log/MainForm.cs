@@ -529,17 +529,20 @@ namespace Bitcoin_Transaction_Log
         {
             lock (LockUpdates) {
                 try {
-                    decimal averageCost = ((buyUSD + feeAmt) - sellUSD) / (totalBTC);
-                    decimal feeMultiplier;
-                    if (IsNumeric(SellAllNowProfitFeeTextBox.Text)) {
-                        feeMultiplier = 1 - (Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m);
-                    } else feeMultiplier = 0m;
+                    if (totalBTC > 0m) {
+                        decimal averageCost = ((buyUSD + feeAmt) - sellUSD) / (totalBTC);
+                        decimal feeMultiplier;
+                        if (IsNumeric(SellAllNowProfitFeeTextBox.Text)) {
+                            feeMultiplier = 1 - (Convert.ToDecimal(SellAllNowProfitFeeTextBox.Text) / 100m);
+                        } else feeMultiplier = 0m;
 
-                    if (feeMultiplier > 0m) {
-                        decimal result = averageCost / feeMultiplier;
-                        SetText("ProfitSellAllBreakEvenTextBox", Convert.ToString(Math.Round(result, 2)));
+                        if (feeMultiplier > 0m) {
+                            decimal result = averageCost / feeMultiplier;
+                            SetText("ProfitSellAllBreakEvenTextBox", Convert.ToString(Math.Round(result, 2)));
+                        } else
+                            SetText("ProfitSellAllBreakEvenTextBox", "None");
                     } else
-                        SetText("ProfitSellAllBreakEvenTextBox", "None");
+                        SetText("ProfitSellAllBreakEvenTextBox", "--");
                 } catch {
                     SetText("ProfitSellAllBreakEvenTextBox", "--");
                 }
