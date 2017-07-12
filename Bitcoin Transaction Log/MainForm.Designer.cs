@@ -31,7 +31,10 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Panel1 = new System.Windows.Forms.Panel();
+            this.settingsButton = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.ProfitSellAllBreakEvenTextBox = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
@@ -69,7 +72,6 @@
             this.Label2 = new System.Windows.Forms.Label();
             this.NewSellButton = new System.Windows.Forms.Button();
             this.Label1 = new System.Windows.Forms.Label();
-            this.AboutButton = new System.Windows.Forms.Button();
             this.Label7 = new System.Windows.Forms.Label();
             this.DataGridView1 = new System.Windows.Forms.DataGridView();
             this.BuySellColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -90,8 +92,7 @@
             this.ToolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.UpdateBitcoinValue = new System.ComponentModel.BackgroundWorker();
             this.PriceAlertTimer = new System.Windows.Forms.Timer(this.components);
-            this.NotifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.cryptoTypeWaitTimer = new System.Windows.Forms.Timer(this.components);
+            this.waitUpdateTimer = new System.Windows.Forms.Timer(this.components);
             this.Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BreakEvenPriceButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpdateLight)).BeginInit();
@@ -106,6 +107,7 @@
             // 
             // Panel1
             // 
+            this.Panel1.Controls.Add(this.settingsButton);
             this.Panel1.Controls.Add(this.label12);
             this.Panel1.Controls.Add(this.ProfitSellAllBreakEvenTextBox);
             this.Panel1.Controls.Add(this.label15);
@@ -143,7 +145,6 @@
             this.Panel1.Controls.Add(this.Label2);
             this.Panel1.Controls.Add(this.NewSellButton);
             this.Panel1.Controls.Add(this.Label1);
-            this.Panel1.Controls.Add(this.AboutButton);
             this.Panel1.Controls.Add(this.Label7);
             this.Panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.Panel1.Location = new System.Drawing.Point(0, 0);
@@ -151,6 +152,16 @@
             this.Panel1.Name = "Panel1";
             this.Panel1.Size = new System.Drawing.Size(1361, 100);
             this.Panel1.TabIndex = 10;
+            // 
+            // settingsButton
+            // 
+            this.settingsButton.Location = new System.Drawing.Point(179, 0);
+            this.settingsButton.Name = "settingsButton";
+            this.settingsButton.Size = new System.Drawing.Size(56, 29);
+            this.settingsButton.TabIndex = 69;
+            this.settingsButton.Text = "Settings";
+            this.settingsButton.UseVisualStyleBackColor = true;
+            this.settingsButton.Click += new System.EventHandler(this.settingsButton_Click);
             // 
             // label12
             // 
@@ -562,16 +573,6 @@
             this.Label1.TabIndex = 11;
             this.Label1.Text = "Current Coinbase";
             // 
-            // AboutButton
-            // 
-            this.AboutButton.Location = new System.Drawing.Point(179, 0);
-            this.AboutButton.Name = "AboutButton";
-            this.AboutButton.Size = new System.Drawing.Size(56, 29);
-            this.AboutButton.TabIndex = 42;
-            this.AboutButton.Text = "About";
-            this.AboutButton.UseVisualStyleBackColor = true;
-            this.AboutButton.Click += new System.EventHandler(this.AboutButton_Click);
-            // 
             // Label7
             // 
             this.Label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -579,21 +580,24 @@
             this.Label7.Name = "Label7";
             this.Label7.Size = new System.Drawing.Size(151, 27);
             this.Label7.TabIndex = 25;
-            this.Label7.Text = "Total Bitcoins";
+            this.Label7.Text = "Total Bitcoin";
             this.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // DataGridView1
             // 
             this.DataGridView1.AllowUserToAddRows = false;
-            this.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.DataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.DataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.BuySellColumn,
@@ -613,10 +617,13 @@
             this.DataGridView1.Location = new System.Drawing.Point(0, 100);
             this.DataGridView1.Name = "DataGridView1";
             this.DataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.DataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle3;
             this.DataGridView1.Size = new System.Drawing.Size(1361, 648);
             this.DataGridView1.TabIndex = 11;
             this.DataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellValueChanged);
             this.DataGridView1.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.DataGridView1_UserDeletedRow);
+            this.DataGridView1.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.DataGridView1_UserDeletingRow);
             this.DataGridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DataGridView1_MouseDown);
             // 
             // BuySellColumn
@@ -648,7 +655,7 @@
             this.BTCColumn.MaxInputLength = 20;
             this.BTCColumn.Name = "BTCColumn";
             this.BTCColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.BTCColumn.ToolTipText = "Bitcoins bought or sold";
+            this.BTCColumn.ToolTipText = "Bitcoin bought or sold";
             // 
             // USDColumn
             // 
@@ -656,7 +663,7 @@
             this.USDColumn.MaxInputLength = 20;
             this.USDColumn.Name = "USDColumn";
             this.USDColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.USDColumn.ToolTipText = "Dollars spent or gained";
+            this.USDColumn.ToolTipText = "USD spent or gained";
             // 
             // FeeAmountColumn
             // 
@@ -664,7 +671,7 @@
             this.FeeAmountColumn.MaxInputLength = 20;
             this.FeeAmountColumn.Name = "FeeAmountColumn";
             this.FeeAmountColumn.ReadOnly = true;
-            this.FeeAmountColumn.ToolTipText = "The fee paid";
+            this.FeeAmountColumn.ToolTipText = "The fee incurred";
             // 
             // FeeChargedColumn
             // 
@@ -693,12 +700,12 @@
             // SellNowProfitColumn1
             // 
             this.SellNowProfitColumn1.FillWeight = 125F;
-            this.SellNowProfitColumn1.HeaderText = "Sell This Now Profit ($)";
+            this.SellNowProfitColumn1.HeaderText = "Sell Now Profit ($)";
             this.SellNowProfitColumn1.MaxInputLength = 25;
             this.SellNowProfitColumn1.Name = "SellNowProfitColumn1";
             this.SellNowProfitColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.SellNowProfitColumn1.ToolTipText = "Sell this rows bitcoin\'s at the current exchange rate minus the price it was boug" +
-    "ht at plus fees.";
+            this.SellNowProfitColumn1.ToolTipText = "Sell this rows cryptocurrency at the current exchange rate minus the price it was" +
+    " bought at plus fees.";
             // 
             // BreakEvenPointColumn
             // 
@@ -760,14 +767,10 @@
             this.PriceAlertTimer.Interval = 1000;
             this.PriceAlertTimer.Tick += new System.EventHandler(this.PriceAlertTimer_Tick);
             // 
-            // NotifyIcon1
+            // waitUpdateTimer
             // 
-            this.NotifyIcon1.Text = "Bitcoin Transaction Logs";
-            this.NotifyIcon1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.NotifyIcon1_MouseClick);
-            // 
-            // cryptoTypeWaitTimer
-            // 
-            this.cryptoTypeWaitTimer.Tick += new System.EventHandler(this.CryptoTypeWaitTimer_Tick);
+            this.waitUpdateTimer.Interval = 150;
+            this.waitUpdateTimer.Tick += new System.EventHandler(this.waitUpdateTimer_Tick);
             // 
             // MainForm
             // 
@@ -826,16 +829,13 @@
         internal System.Windows.Forms.Button NewSellButton;
         internal System.Windows.Forms.Label Label1;
         internal System.Windows.Forms.TextBox CurrPriceBTCTextBox;
-        internal System.Windows.Forms.Button AboutButton;
         internal System.Windows.Forms.DataGridView DataGridView1;
         internal System.Windows.Forms.Timer UpdateRateTimer;
         internal System.Windows.Forms.ToolTip ToolTip1;
         internal System.ComponentModel.BackgroundWorker UpdateBitcoinValue;
         internal System.Windows.Forms.ComboBox CurrencyTypeComboBox;
-        public System.Windows.Forms.Timer PriceAlertTimer;
         internal System.Windows.Forms.Button alertsButton;
         internal System.Windows.Forms.Button minimizeToTrayButton;
-        internal System.Windows.Forms.NotifyIcon NotifyIcon1;
         internal System.Windows.Forms.TextBox SellAllBreakEvenTextBox;
         internal System.Windows.Forms.Label label13;
         internal System.Windows.Forms.Label label14;
@@ -848,6 +848,7 @@
         internal System.Windows.Forms.Label label12;
         internal System.Windows.Forms.TextBox ProfitSellAllBreakEvenTextBox;
         internal System.Windows.Forms.Label label15;
+        internal System.Windows.Forms.Button settingsButton;
         private System.Windows.Forms.DataGridViewComboBoxColumn BuySellColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateTimeColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn BTCColumn;
@@ -860,6 +861,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn BreakEvenPointColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn DisabledColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn CommentsColumn;
-        private System.Windows.Forms.Timer cryptoTypeWaitTimer;
+        internal System.Windows.Forms.Timer PriceAlertTimer;
+        private System.Windows.Forms.Timer waitUpdateTimer;
     }
 }

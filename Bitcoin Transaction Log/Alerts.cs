@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using static Bitcoin_Transaction_Log.Methods1;
 
@@ -14,6 +15,7 @@ namespace Bitcoin_Transaction_Log
     public partial class Alerts : Form
     {
         static MainForm mainForm;
+        bool Loading = true;
         const int limit = 1000;
         const string toggleAlertsButtonDisabled = "Price alerts disabled";
         const string toggleAlertsButtonEnabled = "Price alerts enabled";
@@ -24,46 +26,81 @@ namespace Bitcoin_Transaction_Log
             mainForm = form;
         }
 
-        private void Alerts_Load(object sender, EventArgs e)
+        public void Alerts_Load(object sender, EventArgs e)
         {
-            if (mainForm.CryptoList.CurrentCryptoType == "ETH")
-                Icon = Properties.Resources.Ethereum32icon;
-            else if (mainForm.CryptoList.CurrentCryptoType == "LTC")
-                Icon = Properties.Resources.Litecoin32icon;
-            else
-                Icon = Properties.Resources.Bitcoin50;
+            LoadCryptoInfo(mainForm.CryptoList.CurrentCryptoType);
 
-            var with = mainForm.CryptoList.CryptoRows[mainForm.CryptoList.CurrentCryptoType];
-
-            label3.Text = label3.Text.Replace("BTC", mainForm.CryptoList.CurrentCryptoType);
-
-            for (int i = 0; i <= with.PriceAlertsG.Count - 1; i++) {
-                addListBox1.Items.Add(with.PriceAlertsG[i]);
-            }
-            for (int i = 0; i <= with.PriceAlertsL.Count - 1; i++) {
-                addListBox2.Items.Add(with.PriceAlertsL[i]);
-            }
-            if (!with.PriceAlertsEnabled) {
-                toggleAlertsButton.Text = "Disabled";
-                toolTip1.SetToolTip(toggleAlertsButton, toggleAlertsButtonDisabled);
-            } else {
-                toggleAlertsButton.Text = "Enabled";
-                toolTip1.SetToolTip(toggleAlertsButton, toggleAlertsButtonEnabled);
-            }
+            Loading = false;
         }
 
-        private void Alerts_FormClosing(object sender, FormClosingEventArgs e)
+        public void Alerts_FormClosing(object sender, FormClosingEventArgs e)
         {
 
         }
 
-        private void addButton1_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Load new crypto by updating this form.
+        /// </summary>
+        public void LoadCryptoInfo(string crypto)
+        {
+            if (Loading || !Loading && !string.IsNullOrEmpty(crypto)) {
+
+                if (Loading) {
+                    CryptoComboBox.Items.Clear();
+                    foreach (string item in mainForm.CryptoTypeComboBox.Items) {
+                        CryptoComboBox.Items.Add(item);
+                    }
+                    CryptoComboBox.Text = mainForm.CryptoList.CurrentCryptoType;
+                } else {
+                    CryptoComboChangeLock = true;
+                    CryptoComboBox.Text = crypto;
+                    CryptoComboChangeLock = false;
+                }
+
+                var with = mainForm.CryptoList.CryptoRows;
+                if (!with.ContainsKey(crypto)) {
+                    with.Add(crypto, new CryptoSettings());
+                    if (with[crypto].PriceAlertsG == null)
+                        with[crypto].PriceAlertsG = new List<decimal>();
+                    if (with[crypto].PriceAlertsL == null)
+                        with[crypto].PriceAlertsL = new List<decimal>();
+                }
+
+                if (crypto == "ETH")
+                    Icon = Properties.Resources.Ethereum32icon;
+                else if (crypto == "LTC")
+                    Icon = Properties.Resources.Litecoin32icon;
+                else // BTC
+                    Icon = Properties.Resources.Bitcoin50;
+
+                var with2 = mainForm.CryptoList.CryptoRows[crypto];
+
+                addListBox1.Items.Clear();
+                for (int i = 0; i <= with2.PriceAlertsG.Count - 1; i++) {
+                    addListBox1.Items.Add(with2.PriceAlertsG[i]);
+                }
+                addListBox2.Items.Clear();
+                for (int i = 0; i <= with2.PriceAlertsL.Count - 1; i++) {
+                    addListBox2.Items.Add(with2.PriceAlertsL[i]);
+                }
+
+                if (!with2.PriceAlertsEnabled) {
+                    toggleAlertsButton.Text = "Disabled";
+                    toolTip1.SetToolTip(toggleAlertsButton, toggleAlertsButtonDisabled);
+                } else {
+                    toggleAlertsButton.Text = "Enabled";
+                    toolTip1.SetToolTip(toggleAlertsButton, toggleAlertsButtonEnabled);
+                }
+            }
+        }
+
+        private async void addButton1_Click(object sender, EventArgs e)
         {
             decimal output;
             if (!string.IsNullOrEmpty(addTextBox1.Text)) {
                 if (decimal.TryParse(addTextBox1.Text, out output)) {
                     if (addListBox2.Items.Count + addListBox1.Items.Count + 1 <= limit) {
-                        var with = mainForm.CryptoList.CryptoRows[mainForm.CryptoList.CurrentCryptoType];
+                        var with = mainForm.CryptoList.CryptoRows[CryptoComboBox.Text];
 
                         // check if value already exists in lists
                         foreach (object o in addListBox1.Items) {
@@ -96,6 +133,7 @@ namespace Bitcoin_Transaction_Log
                         }
 
                         // insert/add to settings list
+                        await mainForm.LockPriceAlertTimer.WaitAsync();
                         bool inserted = false;
                         for (int i = 0; i <= with.PriceAlertsG.Count - 1; i++) {
                             if (output < Convert.ToDecimal(with.PriceAlertsG[i])) {
@@ -107,6 +145,7 @@ namespace Bitcoin_Transaction_Log
                         if (!inserted) {
                             with.PriceAlertsG.Add(output);
                         }
+                        mainForm.LockPriceAlertTimer.Release();
 
                         addTextBox1.Text = "";
                         mainForm.StartAlertsTimer();
@@ -121,13 +160,13 @@ namespace Bitcoin_Transaction_Log
             }
         }
 
-        private void addButton2_Click(object sender, EventArgs e)
+        private async void addButton2_Click(object sender, EventArgs e)
         {
             decimal output;
             if (!string.IsNullOrEmpty(addTextBox2.Text)) {
                 if (decimal.TryParse(addTextBox2.Text, out output)) {
                     if (addListBox2.Items.Count + addListBox1.Items.Count + 1 <= limit) {
-                        var with = mainForm.CryptoList.CryptoRows[mainForm.CryptoList.CurrentCryptoType];
+                        var with = mainForm.CryptoList.CryptoRows[CryptoComboBox.Text];
 
                         // check if value already exists in lists
                         foreach (object o in addListBox1.Items) {
@@ -160,6 +199,7 @@ namespace Bitcoin_Transaction_Log
                         }
 
                         // insert/add to settings list
+                        await mainForm.LockPriceAlertTimer.WaitAsync();
                         bool inserted = false;
                         for (int i = 0; i <= with.PriceAlertsL.Count - 1; i++) {
                             if (output > Convert.ToDecimal(with.PriceAlertsL[i])) {
@@ -171,6 +211,7 @@ namespace Bitcoin_Transaction_Log
                         if (!inserted) {
                             with.PriceAlertsL.Add(output);
                         }
+                        mainForm.LockPriceAlertTimer.Release();
 
                         addTextBox2.Text = "";
                         mainForm.StartAlertsTimer();
@@ -195,10 +236,11 @@ namespace Bitcoin_Transaction_Log
                 System.Media.SystemSounds.Beep.Play();
         }
 
-        private static void removeSelectedItems(ListBox lstBox, bool type)
+        private async void removeSelectedItems(ListBox lstBox, bool type)
         {
             if (lstBox.SelectedItems.Count > 0) {
-                var with = mainForm.CryptoList.CryptoRows[mainForm.CryptoList.CurrentCryptoType];
+                await mainForm.LockPriceAlertTimer.WaitAsync();
+                var with = mainForm.CryptoList.CryptoRows[CryptoComboBox.Text];
 
                 if (type) { // >= Price Alerts
                     if (with.PriceAlertsG != null) {
@@ -225,6 +267,7 @@ namespace Bitcoin_Transaction_Log
                 } else if (lstBox.Items.Count > 0) {
                     lstBox.SetSelected(lstBox.Items.Count - 1, true);
                 }
+                mainForm.LockPriceAlertTimer.Release();
             } else {
                 Interaction.MsgBox("No item is selected.");
             }
@@ -232,7 +275,7 @@ namespace Bitcoin_Transaction_Log
 
         private void toggleAlertsButton_Click(object sender, EventArgs e)
         {
-            var with = mainForm.CryptoList.CryptoRows[mainForm.CryptoList.CurrentCryptoType];
+            var with = mainForm.CryptoList.CryptoRows[CryptoComboBox.Text];
             if (toggleAlertsButton.Text == "Enabled") {
                 with.PriceAlertsEnabled = false;
                 toggleAlertsButton.Text = "Disabled";
@@ -280,6 +323,26 @@ namespace Bitcoin_Transaction_Log
                 addButton2.PerformClick();
                 e.SuppressKeyPress = true;
                 e.Handled = true;
+            }
+        }
+
+        private void addListBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete) {
+                if (addListBox1.SelectedItems.Count > 0)
+                    removeSelectedItems(addListBox1, true);
+                else if (addListBox2.SelectedItems.Count > 0)
+                    removeSelectedItems(addListBox2, false);
+                else
+                    System.Media.SystemSounds.Beep.Play();
+            }
+        }
+
+        public bool CryptoComboChangeLock = false;
+        private void CryptoComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!Loading && !CryptoComboChangeLock) {
+                LoadCryptoInfo(CryptoComboBox.Text);
             }
         }
     }

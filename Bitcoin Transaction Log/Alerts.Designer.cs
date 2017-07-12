@@ -37,9 +37,11 @@
             this.addButton2 = new System.Windows.Forms.Button();
             this.addButton1 = new System.Windows.Forms.Button();
             this.addTextBox1 = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.label777 = new System.Windows.Forms.Label();
             this.toggleAlertsButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label444 = new System.Windows.Forms.Label();
+            this.CryptoComboBox = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // addListBox1
@@ -48,13 +50,14 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.addListBox1.FormattingEnabled = true;
             this.addListBox1.ItemHeight = 18;
-            this.addListBox1.Location = new System.Drawing.Point(18, 104);
+            this.addListBox1.Location = new System.Drawing.Point(18, 90);
             this.addListBox1.Margin = new System.Windows.Forms.Padding(4);
             this.addListBox1.Name = "addListBox1";
             this.addListBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.addListBox1.Size = new System.Drawing.Size(160, 184);
             this.addListBox1.TabIndex = 5;
             this.addListBox1.SelectedIndexChanged += new System.EventHandler(this.addListBox1_SelectedIndexChanged);
+            this.addListBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.addListBox_KeyDown);
             // 
             // label1
             // 
@@ -62,9 +65,9 @@
             this.label1.Location = new System.Drawing.Point(15, 35);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(164, 36);
+            this.label1.Size = new System.Drawing.Size(164, 18);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Greater than or equal to\r\n                 >=";
+            this.label1.Text = "Greater than or equal to";
             // 
             // label2
             // 
@@ -72,9 +75,9 @@
             this.label2.Location = new System.Drawing.Point(190, 35);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(146, 36);
+            this.label2.Size = new System.Drawing.Size(146, 18);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Less than or equal to\r\n               <=";
+            this.label2.Text = "Less than or equal to";
             // 
             // addListBox2
             // 
@@ -82,18 +85,19 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.addListBox2.FormattingEnabled = true;
             this.addListBox2.ItemHeight = 18;
-            this.addListBox2.Location = new System.Drawing.Point(185, 104);
+            this.addListBox2.Location = new System.Drawing.Point(185, 90);
             this.addListBox2.Margin = new System.Windows.Forms.Padding(4);
             this.addListBox2.Name = "addListBox2";
             this.addListBox2.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.addListBox2.Size = new System.Drawing.Size(160, 184);
             this.addListBox2.TabIndex = 6;
             this.addListBox2.SelectedIndexChanged += new System.EventHandler(this.addListBox2_SelectedIndexChanged);
+            this.addListBox2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.addListBox_KeyDown);
             // 
             // removeButton1
             // 
             this.removeButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.removeButton1.Location = new System.Drawing.Point(18, 287);
+            this.removeButton1.Location = new System.Drawing.Point(18, 273);
             this.removeButton1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.removeButton1.Name = "removeButton1";
             this.removeButton1.Size = new System.Drawing.Size(327, 44);
@@ -105,7 +109,7 @@
             // 
             // addTextBox2
             // 
-            this.addTextBox2.Location = new System.Drawing.Point(185, 73);
+            this.addTextBox2.Location = new System.Drawing.Point(185, 60);
             this.addTextBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.addTextBox2.MaxLength = 20;
             this.addTextBox2.Name = "addTextBox2";
@@ -116,7 +120,7 @@
             // addButton2
             // 
             this.addButton2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.addButton2.Location = new System.Drawing.Point(291, 73);
+            this.addButton2.Location = new System.Drawing.Point(291, 60);
             this.addButton2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.addButton2.Name = "addButton2";
             this.addButton2.Size = new System.Drawing.Size(54, 24);
@@ -129,7 +133,7 @@
             // addButton1
             // 
             this.addButton1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.addButton1.Location = new System.Drawing.Point(124, 73);
+            this.addButton1.Location = new System.Drawing.Point(124, 60);
             this.addButton1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.addButton1.Name = "addButton1";
             this.addButton1.Size = new System.Drawing.Size(54, 24);
@@ -141,7 +145,7 @@
             // 
             // addTextBox1
             // 
-            this.addTextBox1.Location = new System.Drawing.Point(18, 73);
+            this.addTextBox1.Location = new System.Drawing.Point(18, 60);
             this.addTextBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.addTextBox1.MaxLength = 20;
             this.addTextBox1.Name = "addTextBox1";
@@ -149,16 +153,16 @@
             this.addTextBox1.TabIndex = 1;
             this.addTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.addTextBox1_KeyDown);
             // 
-            // label3
+            // label777
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(76, 5);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(230, 20);
-            this.label3.TabIndex = 10;
-            this.label3.Text = "Price Alerts (Current BTC Price)";
+            this.label777.AutoSize = true;
+            this.label777.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label777.Location = new System.Drawing.Point(96, 5);
+            this.label777.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label777.Name = "label777";
+            this.label777.Size = new System.Drawing.Size(66, 20);
+            this.label777.TabIndex = 10;
+            this.label777.Text = "Current ";
             // 
             // toggleAlertsButton
             // 
@@ -172,14 +176,38 @@
             this.toggleAlertsButton.UseVisualStyleBackColor = true;
             this.toggleAlertsButton.Click += new System.EventHandler(this.toggleAlertsButton_Click);
             // 
+            // label444
+            // 
+            this.label444.AutoSize = true;
+            this.label444.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label444.Location = new System.Drawing.Point(219, 5);
+            this.label444.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label444.Name = "label444";
+            this.label444.Size = new System.Drawing.Size(48, 20);
+            this.label444.TabIndex = 11;
+            this.label444.Text = " Price";
+            // 
+            // CryptoComboBox
+            // 
+            this.CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CryptoComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CryptoComboBox.FormattingEnabled = true;
+            this.CryptoComboBox.Location = new System.Drawing.Point(159, 0);
+            this.CryptoComboBox.Name = "CryptoComboBox";
+            this.CryptoComboBox.Size = new System.Drawing.Size(62, 32);
+            this.CryptoComboBox.TabIndex = 40;
+            this.CryptoComboBox.SelectedIndexChanged += new System.EventHandler(this.CryptoComboBox_SelectedIndexChanged);
+            // 
             // Alerts
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(363, 334);
+            this.ClientSize = new System.Drawing.Size(363, 319);
+            this.Controls.Add(this.CryptoComboBox);
+            this.Controls.Add(this.label444);
             this.Controls.Add(this.toggleAlertsButton);
             this.Controls.Add(this.removeButton1);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label777);
             this.Controls.Add(this.addButton1);
             this.Controls.Add(this.addTextBox1);
             this.Controls.Add(this.addButton2);
@@ -215,6 +243,8 @@
         private System.Windows.Forms.TextBox addTextBox1;
         private System.Windows.Forms.Button toggleAlertsButton;
         private System.Windows.Forms.ToolTip toolTip1;
-        internal System.Windows.Forms.Label label3;
+        internal System.Windows.Forms.Label label777;
+        internal System.Windows.Forms.Label label444;
+        internal System.Windows.Forms.ComboBox CryptoComboBox;
     }
 }

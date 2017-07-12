@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -13,6 +14,11 @@ namespace Bitcoin_Transaction_Log
 {
     public class CryptoMain
     {
+        public CryptoMain()
+        {
+
+        }
+
         public Dictionary<string, CryptoSettings> CryptoRows = new Dictionary<string, CryptoSettings>();
 
         private CryptoNames LastCryptoName = CryptoNames.Bitcoin;
@@ -68,12 +74,7 @@ namespace Bitcoin_Transaction_Log
                 }
             }
         }
-
-        public CryptoMain()
-        {
-
-        }
-
+        
         /// <summary>
         /// Load or create new cryptocurrency.
         /// </summary>
@@ -116,10 +117,14 @@ namespace Bitcoin_Transaction_Log
                     mainForm.CryptoList = new CryptoMain();
 
                 if (mainForm.CryptoList.CryptoRows.Count > 0 && mainForm.CryptoList.CryptoRows.ContainsKey(CurrentCryptoType)) {
-                    mainForm.CryptoList.CryptoRows[CurrentCryptoType].Rows = GetDataGridViewRows(mainForm.DataGridView1);
+                    bool isNull;
+                    List<DataGridSettingsRow> newRows = GetDataGridViewRows(mainForm.DataGridView1, out isNull);
+                    if (!isNull)
+                        mainForm.CryptoList.CryptoRows[CurrentCryptoType].Rows = newRows;
                 } else {
                     CryptoSettings newCrypto = new CryptoSettings();
-                    newCrypto.Rows = GetDataGridViewRows(mainForm.DataGridView1);
+                    bool isNull;
+                    newCrypto.Rows = GetDataGridViewRows(mainForm.DataGridView1, out isNull);
                     mainForm.CryptoList.CryptoRows.Add(CurrentCryptoType, newCrypto);
                 }
             }
@@ -137,10 +142,10 @@ namespace Bitcoin_Transaction_Log
                     try {
                         DataGridView1[0, i].Value = CryptoRows[CryptoType].Rows[i].Transaction;
                         DataGridView1[1, i].Value = CryptoRows[CryptoType].Rows[i].Date;
-                        DataGridView1[2, i].Value = CryptoRows[CryptoType].Rows[i].BTC;
-                        DataGridView1[3, i].Value = CryptoRows[CryptoType].Rows[i].USD;
-                        DataGridView1[5, i].Value = CryptoRows[CryptoType].Rows[i].Fee;
-                        DataGridView1[6, i].Value = CryptoRows[CryptoType].Rows[i].ExchangeRate;
+                        DataGridView1[2, i].Value = CryptoRows[CryptoType].Rows[i].BTC.RemoveTrailingZeroes();
+                        DataGridView1[3, i].Value = CryptoRows[CryptoType].Rows[i].USD.RemoveTrailingZeroes();
+                        DataGridView1[5, i].Value = CryptoRows[CryptoType].Rows[i].Fee.RemoveTrailingZeroes();
+                        DataGridView1[6, i].Value = CryptoRows[CryptoType].Rows[i].ExchangeRate.RemoveTrailingZeroes();
                         DataGridView1[10, i].Value = CryptoRows[CryptoType].Rows[i].Disabled;
                         DataGridView1[11, i].Value = CryptoRows[CryptoType].Rows[i].Comments;
                     } catch { }
@@ -148,18 +153,21 @@ namespace Bitcoin_Transaction_Log
             }
         }
 
-        public static List<DataGridSettingsRow> GetDataGridViewRows(DataGridView DataGridView1)
+        public static List<DataGridSettingsRow> GetDataGridViewRows(DataGridView DataGridView1, out bool isNull)
         {
             List<DataGridSettingsRow> NewList = new List<DataGridSettingsRow>();
-            if (DataGridView1 != null)
+            if (DataGridView1 != null) {
+                isNull = false;
                 for (int i = 0; i <= DataGridView1.Rows.Count - 1; i++) {
                     try {
                         NewList.Add(new DataGridSettingsRow(DataGridView1[0, i].Value, DataGridView1[1, i].Value,
                             DataGridView1[2, i].Value, DataGridView1[3, i].Value, DataGridView1[5, i].Value,
                             DataGridView1[6, i].Value, DataGridView1[10, i].Value, DataGridView1[11, i].Value));
-                    } catch {
-                    }
+                    } catch { }
                 }
+            } else {
+                isNull = true;
+            }
             return NewList;
         }
 
@@ -171,43 +179,52 @@ namespace Bitcoin_Transaction_Log
             var m = mainForm;
             switch (CurrentCryptoType) {
                 case "BTC":
-                    m.Label7.Text = "Total Bitcoins";
+                    m.Label7.Text = "Total Bitcoin";
                     m.Icon = Properties.Resources.Bitcoin50;
+                    if (m.notificationIcon1 != null)
+                        m.notificationIcon1.notifyIcon.Icon = Properties.Resources.Bitcoin50;
+                    if (MainForm.settingsForm != null && MainForm.settingsForm.Visible)
+                        MainForm.settingsForm.Icon = Properties.Resources.Bitcoin50;
                     m.CryptoPictureBox1.BackgroundImage = Properties.Resources.bitcoin2;
                     m.CryptoPictureBox2.BackgroundImage = Properties.Resources.bitcoin2;
                     m.ToolTip1.SetToolTip(m.CryptoPictureBox1, "Bitcoins (BTC)");
                     m.ToolTip1.SetToolTip(m.CryptoPictureBox2, "Bitcoins (BTC)");
-                    if (MainForm.alerts != null)
-                        MainForm.alerts.Icon = Properties.Resources.Bitcoin50;
                     break;
                 case "ETH":
                     m.Label7.Text = "Total Ethereum";
                     m.Icon = Properties.Resources.Ethereum32icon;
+                    if (m.notificationIcon1 != null)
+                        m.notificationIcon1.notifyIcon.Icon = Properties.Resources.Ethereum32icon;
+                    if (MainForm.settingsForm != null && MainForm.settingsForm.Visible)
+                        MainForm.settingsForm.Icon = Properties.Resources.Ethereum32icon;
                     m.CryptoPictureBox1.BackgroundImage = Properties.Resources.Ethereum32;
                     m.CryptoPictureBox2.BackgroundImage = Properties.Resources.Ethereum32;
                     m.ToolTip1.SetToolTip(m.CryptoPictureBox1, "Ethereum (ETH)");
                     m.ToolTip1.SetToolTip(m.CryptoPictureBox2, "Ethereum (ETH)");
-                    if (MainForm.alerts != null)
-                        MainForm.alerts.Icon = Properties.Resources.Ethereum32icon;
                     break;
                 case "LTC":
-                    m.Label7.Text = "Total Litecoins";
+                    m.Label7.Text = "Total Litecoin";
                     m.Icon = Properties.Resources.Litecoin32icon;
+                    if (m.notificationIcon1 != null)
+                        m.notificationIcon1.notifyIcon.Icon = Properties.Resources.Litecoin32icon;
+                    if (MainForm.settingsForm != null && MainForm.settingsForm.Visible)
+                        MainForm.settingsForm.Icon = Properties.Resources.Litecoin32icon;
                     m.CryptoPictureBox1.BackgroundImage = Properties.Resources.Litecoin32;
                     m.CryptoPictureBox2.BackgroundImage = Properties.Resources.Litecoin32;
                     m.ToolTip1.SetToolTip(m.CryptoPictureBox1, "Litecoins (LTC)");
                     m.ToolTip1.SetToolTip(m.CryptoPictureBox2, "Litecoins (LTC)");
-                    if (MainForm.alerts != null)
-                        MainForm.alerts.Icon = Properties.Resources.Litecoin32icon;
                     break;
                 default:
                     break;
             }
             m.Text = m.Text.Replace(LastCryptoName.ToString(), CurrentCryptoName.ToString());
             m.DataGridView1.Columns[2].HeaderText = m.DataGridView1.Columns[2].HeaderText.Replace(LastCryptoType, CurrentCryptoType);
+            m.DataGridView1.Columns[2].ToolTipText = m.DataGridView1.Columns[2].ToolTipText.Replace(LastCryptoName.ToString(), CurrentCryptoName.ToString());
             m.DataGridView1.Columns[6].HeaderText = m.DataGridView1.Columns[6].HeaderText.Replace(LastCryptoType, CurrentCryptoType);
-            if (MainForm.alerts != null)
-                MainForm.alerts.label3.Text = MainForm.alerts.label3.Text.Replace(LastCryptoType, CurrentCryptoType);
+            m.DataGridView1.Columns[6].ToolTipText = m.DataGridView1.Columns[6].ToolTipText.Replace(LastCryptoType, CurrentCryptoType);
+            if (MainForm.alerts != null && MainForm.alerts.Visible == true) {
+                MainForm.alerts.LoadCryptoInfo(CurrentCryptoType);
+            }
             if (MainForm.newBuySell.Count > 0) {
                 for (int i = 0; i < MainForm.newBuySell.Count; i++) {
                     MainForm.newBuySell[i].Label1.Text = CurrentCryptoType;
@@ -221,11 +238,13 @@ namespace Bitcoin_Transaction_Log
                 }
             }
             m.UpdatingInProgressStr = m.UpdatingInProgressStr.Replace(LastCryptoName.ToString(), CurrentCryptoName.ToString());
-            m.UpdatingPausedStr = m.UpdatingInProgressStr.Replace(LastCryptoName.ToString(), CurrentCryptoName.ToString());
-            m.UpdatingStoppedStr = m.UpdatingInProgressStr.Replace(LastCryptoName.ToString(), CurrentCryptoName.ToString());
+            m.UpdatingPausedStr = m.UpdatingPausedStr.Replace(LastCryptoName.ToString(), CurrentCryptoName.ToString());
+            m.UpdatingStoppedStr = m.UpdatingStoppedStr.Replace(LastCryptoName.ToString(), CurrentCryptoName.ToString());
 
             if (MainForm.Loading)
                 m.CryptoTypeComboBox.Text = CurrentCryptoType;
+
+            m.Focus();
         }
     }
 }

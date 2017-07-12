@@ -106,5 +106,17 @@ namespace Bitcoin_Transaction_Log.Properties {
                 this["CryptoMain"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SettingsInfo {
+            get {
+                return ((string)(this["SettingsInfo"]));
+            }
+            set {
+                this["SettingsInfo"] = value;
+            }
+        }
     }
 }

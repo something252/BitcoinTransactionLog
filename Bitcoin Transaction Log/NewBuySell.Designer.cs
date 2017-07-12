@@ -148,6 +148,7 @@
             this.BTCExchangeRateTextBox.Size = new System.Drawing.Size(307, 26);
             this.BTCExchangeRateTextBox.TabIndex = 7;
             this.BTCExchangeRateTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.BTCExchangeRateTextBox.Click += new System.EventHandler(this.BTCExchangeRateTextBox_Click);
             this.BTCExchangeRateTextBox.TextChanged += new System.EventHandler(this.BTCExchangeRateTextBox_TextChanged);
             // 
             // Label3
